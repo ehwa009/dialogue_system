@@ -1,0 +1,9 @@
+<launch>
+    <arg name="network_model" default="lstm" />
+    <arg name="lang" default='eng' />
+
+    <node name="dialogue_system" type="node_eng.py" pkg="dialogue_system" output="screen">
+        <param name="network_model" value="$(arg network_model)" />
+        <param name="lang" value="$(arg lang)" />
+    </node>    
+</launch>

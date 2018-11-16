@@ -1,0 +1,182 @@
+2018-11-16 23:06:52,140:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:06:52,140:INFO: training started.
+2018-11-16 23:06:52,141:INFO: signal_shutdown [atexit]
+2018-11-16 23:06:52,142:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:06:52,143:INFO: atexit
+2018-11-16 23:09:36,650:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:09:36,651:INFO: training started.
+2018-11-16 23:09:36,651:INFO: signal_shutdown [atexit]
+2018-11-16 23:09:36,653:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:09:36,653:INFO: atexit
+2018-11-16 23:26:39,842:INFO: signal_shutdown [atexit]
+2018-11-16 23:26:39,845:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:26:39,845:INFO: atexit
+2018-11-16 23:26:59,983:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:26:59,983:INFO: training started.
+2018-11-16 23:27:00,042:INFO: signal_shutdown [atexit]
+2018-11-16 23:27:00,044:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:27:00,044:INFO: atexit
+2018-11-16 23:30:47,377:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:30:47,378:INFO: training started.
+2018-11-16 23:30:47,435:INFO: signal_shutdown [atexit]
+2018-11-16 23:30:47,437:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:30:47,438:INFO: atexit
+2018-11-16 23:33:43,629:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:33:43,630:INFO: training started.
+2018-11-16 23:33:43,690:INFO: signal_shutdown [atexit]
+2018-11-16 23:33:43,692:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:33:43,693:INFO: atexit
+2018-11-16 23:34:02,651:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:34:02,652:INFO: training started.
+2018-11-16 23:34:02,926:INFO: signal_shutdown [atexit]
+2018-11-16 23:34:02,928:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:34:02,928:INFO: atexit
+2018-11-16 23:34:59,527:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:34:59,528:INFO: training started.
+2018-11-16 23:34:59,697:INFO: signal_shutdown [atexit]
+2018-11-16 23:34:59,699:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:34:59,699:INFO: atexit
+2018-11-16 23:37:10,017:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:37:10,017:INFO: training started.
+2018-11-16 23:42:06,522:INFO: 
+
+ 1.tr loss [2.4285035]
+2018-11-16 23:42:06,641:INFO: signal_shutdown [atexit]
+2018-11-16 23:42:06,643:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:42:06,644:INFO: atexit
+2018-11-16 23:44:06,238:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:44:06,238:INFO: training started.
+2018-11-16 23:44:06,828:INFO: 
+
+ 1.tr loss [2.580265]
+2018-11-16 23:44:06,969:INFO: signal_shutdown [atexit]
+2018-11-16 23:44:06,971:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:44:06,971:INFO: atexit
+2018-11-16 23:44:48,422:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:44:48,423:INFO: training started.
+2018-11-16 23:44:48,485:INFO: signal_shutdown [atexit]
+2018-11-16 23:44:48,487:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:44:48,487:INFO: atexit
+2018-11-16 23:47:33,611:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:47:33,612:INFO: training started.
+2018-11-16 23:47:34,200:INFO: 
+
+ 1.tr loss [2.528709]
+2018-11-16 23:47:34,331:INFO: signal_shutdown [atexit]
+2018-11-16 23:47:34,333:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:47:34,334:INFO: atexit
+2018-11-16 23:48:30,564:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:48:30,565:INFO: training started.
+2018-11-16 23:48:31,195:INFO: 
+
+ 1.tr loss [2.5683174]
+2018-11-16 23:48:31,361:INFO: signal_shutdown [atexit]
+2018-11-16 23:48:31,364:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:48:31,364:INFO: atexit
+2018-11-16 23:49:13,631:INFO: '[94m[/dialogue_trainer trainer][0m initialized - HCN_LSTM (input condition: 5, lang: kor)
+2018-11-16 23:49:13,632:INFO: training started.
+2018-11-16 23:49:14,233:INFO: 
+
+ 1.tr loss [2.595907]
+2018-11-16 23:49:14,426:INFO: 1.dev accuracy 0.0
+
+2018-11-16 23:49:14,990:INFO: 
+
+ 2.tr loss [2.5923002]
+2018-11-16 23:49:15,134:INFO: 2.dev accuracy 0.0
+
+2018-11-16 23:49:15,694:INFO: 
+
+ 3.tr loss [2.5892787]
+2018-11-16 23:49:15,903:INFO: 3.dev accuracy 0.0
+
+2018-11-16 23:49:16,466:INFO: 
+
+ 4.tr loss [2.586572]
+2018-11-16 23:49:16,606:INFO: 4.dev accuracy 0.0
+
+2018-11-16 23:49:17,175:INFO: 
+
+ 5.tr loss [2.5840695]
+2018-11-16 23:49:17,318:INFO: 5.dev accuracy 0.0
+
+2018-11-16 23:49:17,871:INFO: 
+
+ 6.tr loss [2.5817132]
+2018-11-16 23:49:18,012:INFO: 6.dev accuracy 0.0
+
+2018-11-16 23:49:18,647:INFO: 
+
+ 7.tr loss [2.5794673]
+2018-11-16 23:49:18,791:INFO: 7.dev accuracy 0.0
+
+2018-11-16 23:49:19,355:INFO: 
+
+ 8.tr loss [2.57731]
+2018-11-16 23:49:19,497:INFO: 8.dev accuracy 0.0
+
+2018-11-16 23:49:20,052:INFO: 
+
+ 9.tr loss [2.5752258]
+2018-11-16 23:49:20,197:INFO: 9.dev accuracy 0.0
+
+2018-11-16 23:49:20,765:INFO: 
+
+ 10.tr loss [2.5732055]
+2018-11-16 23:49:20,912:INFO: 10.dev accuracy 0.0
+
+2018-11-16 23:49:21,530:INFO: 
+
+ 11.tr loss [2.571241]
+2018-11-16 23:49:21,692:INFO: 11.dev accuracy 0.0
+
+2018-11-16 23:49:22,264:INFO: 
+
+ 12.tr loss [2.569328]
+2018-11-16 23:49:22,415:INFO: 12.dev accuracy 0.0
+
+2018-11-16 23:49:22,961:INFO: 
+
+ 13.tr loss [2.5674624]
+2018-11-16 23:49:23,108:INFO: 13.dev accuracy 0.0
+
+2018-11-16 23:49:23,672:INFO: 
+
+ 14.tr loss [2.5656412]
+2018-11-16 23:49:23,880:INFO: 14.dev accuracy 0.0
+
+2018-11-16 23:49:24,438:INFO: 
+
+ 15.tr loss [2.5638616]
+2018-11-16 23:49:24,582:INFO: 15.dev accuracy 0.0
+
+2018-11-16 23:49:25,151:INFO: 
+
+ 16.tr loss [2.5621228]
+2018-11-16 23:49:25,301:INFO: 16.dev accuracy 0.0
+
+2018-11-16 23:49:25,866:INFO: 
+
+ 17.tr loss [2.5604222]
+2018-11-16 23:49:26,013:INFO: 17.dev accuracy 0.0
+
+2018-11-16 23:49:26,651:INFO: 
+
+ 18.tr loss [2.5587585]
+2018-11-16 23:49:26,795:INFO: 18.dev accuracy 0.0
+
+2018-11-16 23:49:27,355:INFO: 
+
+ 19.tr loss [2.5571303]
+2018-11-16 23:49:27,507:INFO: 19.dev accuracy 0.0
+
+2018-11-16 23:49:28,063:INFO: 
+
+ 20.tr loss [2.5555367]
+2018-11-16 23:49:28,209:INFO: 20.dev accuracy 0.0
+
+2018-11-16 23:49:28,209:INFO: signal_shutdown [training finish]
+2018-11-16 23:49:28,211:INFO: topic[/rosout] removing connection to /rosout
+2018-11-16 23:49:28,211:INFO: training finish
+2018-11-16 23:49:28,367:INFO: signal_shutdown [signal-2]
+2018-11-16 23:49:28,368:INFO: signal_shutdown [atexit]
