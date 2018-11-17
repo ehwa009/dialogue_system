@@ -129,7 +129,7 @@ class HCN_LSTM():
     def save(self):
         saver = tf.train.Saver()
         file_path = os.path.join(
-            rospkg.RosPack().get_path('hcn_dialog_ros'), 'ckpt')
+            rospkg.RosPack().get_path('hcn_dialog_ros'), 'ckpt_kor')
         saver.save(self.sess, '%s/hcn.ckpt'%file_path, global_step=0)
         print(':: saved to ckpt/hcn.ckpt\n')
 
@@ -137,7 +137,7 @@ class HCN_LSTM():
     def restore(self):
         saver = tf.train.Saver()
         file_path = os.path.join(
-            rospkg.RosPack().get_path('hcn_dialog_ros'), 'ckpt')
+            rospkg.RosPack().get_path('hcn_dialog_ros'), 'ckpt_kor')
         ckpt = tf.train.get_checkpoint_state(file_path)        
         
         if ckpt and ckpt.model_checkpoint_path:

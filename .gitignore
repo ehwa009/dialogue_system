@@ -109,3 +109,10 @@ data/text8.*
 data/text8
 data/korean_word2vec
 data/korean_word2vec.*
+data/*.bin
+data/*.tsv
+data/*.vec
+
+log/*
+
+.vscode

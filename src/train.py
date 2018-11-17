@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 #-*- encoding: utf8 -*-
-
 from __future__ import division
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from modules.bow import BoW_encoder
+from modules.embed import UtteranceEmbed
 
 import warnings
 warnings.filterwarnings('ignore', category=RuntimeWarning)
@@ -14,6 +19,7 @@ from modules.rnn_model.inverted_lstm_model import InvertedLSTM
 from modules.rnn_model.multi_gru_model import MultiGRU
 from modules.rnn_model.multi_lstm_model import MultiLSTM
 from modules.rnn_model.hcn_lstm_model import HCN_LSTM
+from modules.rnn_model.bidirectional_lstm import Bidirectional_LSTM
 
 import numpy as np
 import sys, os
@@ -32,7 +38,6 @@ class Train():
         self.lang = args[2]
 
         if self.lang == 'eng':
-            from modules.embed import UtteranceEmbed
             from modules.entities import EntityTracker
             from modules.data_utils import Data
             from modules.actions import ActionTracker
@@ -42,8 +47,10 @@ class Train():
             from modules.actions_kor import ActionTracker
         ###################################################################
 
-        if self.lang != 'kor':
+        if self.lang == 'eng':
             self.emb = UtteranceEmbed(lang=self.lang)
+        elif self.lang == 'kor':
+            self.emb = UtteranceEmbed(lang=self.lang, dim=200)
         et = EntityTracker()
         self.bow_enc = BoW_encoder()
         
@@ -68,9 +75,7 @@ class Train():
             obs_size = self.emb.dim + et.num_features
         elif self.feature == 4:
             obs_size = self.emb.dim + self.bow_enc.vocab_size + et.num_features
-        elif self.feature == 5:
-            obs_size = self.bow_enc.vocab_size + et.num_features + action_size
-        
+
         # set network type
         if self.network == 'lstm':
             self.net = LSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size)
@@ -128,7 +133,6 @@ class Train():
     def dialog_train(self, dialog):
         ###################################################################
         if self.lang == 'eng':
-            from modules.embed import UtteranceEmbed
             from modules.entities import EntityTracker
             from modules.data_utils import Data
             from modules.actions import ActionTracker
@@ -148,31 +152,24 @@ class Train():
             u_ent = et.extract_entities(u)
             u_ent_features = et.context_features()
             u_bow = self.bow_enc.encode(u)
+            u_emb = self.emb.encode(u)
+            action_mask = at.action_mask()
 
-            # print(u,r)
+            # print(unicode(u), r)
             # print('fuck: %s' % u_ent_features)            
-            
-            if self.feature != 5:
-                u_emb = self.emb.encode(u)
                 
-                # concatenated features
-                if self.feature == 1:
-                    features = u_emb
-                elif self.feature == 2: 
-                    features = np.concatenate((u_emb, u_bow), axis=0)
-                elif self.feature == 3:
-                    features = np.concatenate((u_ent_features, u_emb), axis=0)
-                elif self.feature == 4:
-                    features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-            
-            # only for korean
-            else:
-                action_mask = at.action_mask()
-                features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
+            # concatenated features
+            if self.feature == 1:
+                features = u_emb
+            elif self.feature == 2: 
+                features = np.concatenate((u_emb, u_bow), axis=0)
+            elif self.feature == 3:
+                features = np.concatenate((u_ent_features, u_emb), axis=0)
+            elif self.feature == 4:
+                features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
             
             # forward propagation with cumulative loss
             if self.net.__class__.__name__ == "HCN_LSTM":
-                action_mask = at.action_mask()
                 loss += self.net.train_step(features, r, action_mask)
             else:
                 loss += self.net.train_step(features, r)
@@ -182,7 +179,6 @@ class Train():
     def evaluate(self, eval=False):
         ###################################################################
         if self.lang == 'eng':
-            from modules.embed import UtteranceEmbed
             from modules.entities import EntityTracker
             from modules.data_utils import Data
             from modules.actions import ActionTracker
@@ -215,9 +211,8 @@ class Train():
                 u_ent = et.extract_entities(u)
                 u_ent_features = et.context_features()
                 u_bow = self.bow_enc.encode(u)
-
-            if self.feature != 5:
                 u_emb = self.emb.encode(u)
+                action_mask = at.action_mask()
                 
                 # concatenated features
                 if self.feature == 1:
@@ -228,14 +223,8 @@ class Train():
                     features = np.concatenate((u_ent_features, u_emb), axis=0)
                 elif self.feature == 4:
                     features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-            
-            # only for korean
-            else:
-                action_mask = at.action_mask()
-                features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
                 
                 if self.net.__class__.__name__ == "HCN_LSTM":
-                    action_mask = at.action_mask()
                     probs, prediction = self.net.forward(features, action_mask)
                 else:
                     probs, prediction = self.net.forward(features)
