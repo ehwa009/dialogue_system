@@ -1,32 +1,37 @@
 #!/bin/bash   
 
-rosrun dialogue_system train.py 1 lstm
-rosrun dialogue_system train.py 2 lstm
-rosrun dialogue_system train.py 3 lstm
-rosrun dialogue_system train.py 4 lstm
+# eng
+# rosrun dialogue_system train.py 4 hcn_lstm eng action_mask
+rosrun dialogue_system train.py 4 hcn_lstm eng
+# rosrun dialogue_system train.py 4 gru eng action_mask
+rosrun dialogue_system train.py 4 gru eng
+# rosrun dialogue_system train.py 4 inverted_lstm eng action_mask
+rosrun dialogue_system train.py 4 inverted_lstm eng
+# rosrun dialogue_system train.py 4 inverted_gru eng action_mask
+rosrun dialogue_system train.py 4 inverted_gru eng
+# rosrun dialogue_system train.py 4 multi_lstm eng action_mask
+rosrun dialogue_system train.py 4 multi_lstm eng
+# rosrun dialogue_system train.py 4 multi_gru eng action_mask
+rosrun dialogue_system train.py 4 multi_gru eng
+# rosrun dialogue_system train.py 4 bidirectional_lstm eng action_mask
+rosrun dialogue_system train.py 4 bidirectional_lstm eng
+# rosrun dialogue_system train.py 4 bidirectional_gru eng action_mask
+rosrun dialogue_system train.py 4 bidirectional_gru eng
 
-rosrun dialogue_system train.py 1 gru
-rosrun dialogue_system train.py 2 gru
-rosrun dialogue_system train.py 3 gru
-rosrun dialogue_system train.py 4 gru
-
-rosrun dialogue_system train.py 1 inverted_lstm
-rosrun dialogue_system train.py 2 inverted_lstm
-rosrun dialogue_system train.py 3 inverted_lstm
-rosrun dialogue_system train.py 4 inverted_lstm
-
-rosrun dialogue_system train.py 1 inverted_gru
-rosrun dialogue_system train.py 2 inverted_gru
-rosrun dialogue_system train.py 3 inverted_gru
-rosrun dialogue_system train.py 4 inverted_gru
-
-rosrun dialogue_system train.py 1 multi_gru
-rosrun dialogue_system train.py 2 multi_gru
-rosrun dialogue_system train.py 3 multi_gru
-rosrun dialogue_system train.py 4 multi_gru
-
-rosrun dialogue_system train.py 1 multi_lstm
-rosrun dialogue_system train.py 2 multi_lstm
-rosrun dialogue_system train.py 3 multi_lstm
-rosrun dialogue_system train.py 4 multi_lstm
-
+# kor
+# rosrun dialogue_system train.py 4 hcn_lstm kor action_mask
+# rosrun dialogue_system train.py 4 hcn_lstm kor
+# rosrun dialogue_system train.py 4 gru kor action_mask
+# rosrun dialogue_system train.py 4 gru kor
+# rosrun dialogue_system train.py 4 inverted_lstm kor action_mask
+# rosrun dialogue_system train.py 4 inverted_lstm kor
+# rosrun dialogue_system train.py 4 inverted_gru kor action_mask
+# rosrun dialogue_system train.py 4 inverted_gru kor
+# rosrun dialogue_system train.py 4 multi_lstm kor action_mask
+# rosrun dialogue_system train.py 4 multi_lstm kor
+# rosrun dialogue_system train.py 4 multi_gru kor action_mask
+# rosrun dialogue_system train.py 4 multi_gru kor
+# rosrun dialogue_system train.py 4 bidirection_lstm kor action_mask
+# rosrun dialogue_system train.py 4 bidirectional_lstm kor
+# rosrun dialogue_system train.py 4 bidirection_gru kor action_mask
+# rosrun dialogue_system train.py 4 bidirectional_gru kor

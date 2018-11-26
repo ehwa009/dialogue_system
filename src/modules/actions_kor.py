@@ -12,7 +12,7 @@ from modules.entities_kor import EntityTracker as et
 1. api_call 예약 <name> <address> <time>
 2. api_call 위치 <location>
 3. api_call 처방전 <name> <address>
-4. 감사합니다 <name> 님. 주소를 알려주시겠어요
+4. 감사합니다 <name> 님. 주소를 알려주시겠어요?
 5. 네 알겠습니다. 오늘 보려는 의사선생님 성함을 알려주세요.
 6. 안녕하세요, 저는 리셉션 로봇 나오에요. 어떻게 도와드릴까요?
 7. 알겠습니다 <name> 님, 오늘 약속시간은 어떻게 되시나요?

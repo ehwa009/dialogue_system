@@ -13,21 +13,20 @@ def read_dialogs(with_indices=False):
         n = 1
         dialog_indices = []
         updated_dialogs = []
-
         for i, dialog in enumerate(dialogs):
-            if not dialogs[i][0]: # user utterance is dialogs[i][0]
-                dialog_indices.append(
-                    {
-                        'start' : prev_idx + 1,
-                        'end' : i - n + 1
-                    }
-                )
+            if len(dialog) == 1:
+                dialog_indices.append({
+                    'start' : prev_idx + 1,
+                    'end' : i - n + 1
+                })
+                prev_idx = i - n
+                n += 1
             else:
-                updated_dialogs.append(dialog) # add user's utterance
-        
+                updated_dialogs.append(dialog)        
+
         if with_indices:
             return updated_dialogs, dialog_indices[:-1]
-        
+
         return updated_dialogs
 
 def get_utterances(dialogs=[]):

@@ -19,9 +19,9 @@ class EntityTracker():
         }
 
         self.num_features = len(self.entities)
-        self.name = ['황의준', '황의준입니다', '황의준이야', '황의준이에요']
-        self.address = ['조례동이야', '조례동입니다', '조례동에', '조례동']
-        self.time = ['4시야', '4시요', '4시입니다', '3시', '3시야', '4시']
+        self.name = ['황의준', '윤혜정']
+        self.address = ['조례동']
+        self.time = ['4시', '3시']
         self.location = ['화장실']
 
         self.EntType = Enum('Entity Type', '<name> <address> <time> <location> <non_ent>')

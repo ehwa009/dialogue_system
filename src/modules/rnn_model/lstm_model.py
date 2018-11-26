@@ -34,7 +34,6 @@ class LSTM():
             
             projected_features = tf.matmul(features_, Wi) + bi
             ########################################################################
-
             lstm_f = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
             lstm_op, state = lstm_f(inputs=projected_features, state=(init_state_c_, init_state_h_))
 
@@ -54,7 +53,7 @@ class LSTM():
             loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
 
             # default was 0.1
-            train_op = tf.train.AdadeltaOptimizer(0.005).minimize(loss)
+            train_op = tf.train.AdadeltaOptimizer(0.01).minimize(loss)
 
             # each output values
             self.loss = loss

@@ -4,6 +4,7 @@
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=RuntimeWarning)
+import json
 
 from enum import Enum
 
@@ -92,6 +93,10 @@ class EntityTracker():
         keys = sorted(keys)
         self.ctxt_features = np.array( [bool(self.entities[key]) for key in keys], 
                                     dtype=np.float32 )
+
+        # to check entity extract
+        # print(json.dumps(self.entities, indent=2))
+
         return self.ctxt_features
 
     def do_clear_entities(self):

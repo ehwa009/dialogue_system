@@ -12,13 +12,18 @@ from tensorflow.contrib.layers import xavier_initializer as xav
 
 class InvertedGRU():
 
-    def __init__(self, obs_size, nb_hidden=128, action_size=16):
+    def __init__(self, obs_size, nb_hidden=128, action_size=16, lang='eng', is_action_mask=False):
 
         self.obs_size = obs_size
         self.nb_hidden = nb_hidden
         self.action_size = action_size
+        self.lang = lang
+        self.is_action_mask = is_action_mask
 
-        self.file_path = os.path.join(rospkg.RosPack().get_path('dialogue_system'),'ckpt')
+        if self.lang == 'eng':
+            self.file_path = os.path.join(rospkg.RosPack().get_path('dialogue_system'),'ckpt')
+        elif self.lang == 'kor':
+            self.file_path = os.path.join(rospkg.RosPack().get_path('dialogue_system'),'ckpt_kor')
 
         def __graph__():
             tf.reset_default_graph()
@@ -29,6 +34,7 @@ class InvertedGRU():
 
             init_state_h_ = tf.placeholder(tf.float32, [1, nb_hidden])
             action_ = tf.placeholder(tf.int32, name='ground_truth_action')
+            action_mask_ = tf.placeholder(tf.float32, [action_size], name='action_mask')
             
             # input projection - 인풋 dimention을 맞춰주기 위한 trick ##############
             Wi = tf.get_variable('Wi', [obs_size, nb_hidden], initializer=xav())
@@ -49,14 +55,17 @@ class InvertedGRU():
             logits = tf.matmul(state_reshaped, Wo) + bo
             ########################################################################
 
-            probs = tf.squeeze(tf.nn.softmax(logits))
+            if self.is_action_mask:
+                probs = tf.multiply(tf.squeeze(tf.nn.softmax(logits)), action_mask_)
+            else:
+                probs = tf.squeeze(tf.squeeze(tf.nn.softmax(logits)))
             
             prediction = tf.arg_max(probs, dimension=0)
 
             loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
 
             # default was 0.1
-            train_op = tf.train.AdadeltaOptimizer(0.001).minimize(loss)
+            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
 
             # each output values
             self.loss = loss
@@ -70,6 +79,7 @@ class InvertedGRU():
             self.features_ = features_
             self.init_state_h_ = init_state_h_
             self.action_ = action_
+            self.action_mask_ = action_mask_
 
         # build graph
         __graph__()
@@ -82,26 +92,43 @@ class InvertedGRU():
         self.init_state_h = np.zeros([1,self.nb_hidden], dtype=np.float32)
 
     # forward propagation
-    def forward(self, features):
+    def forward(self, features, action_mask=None):
         # forward
-        probs, prediction, state_h = self.sess.run( [self.probs, self.prediction, self.state], 
-                feed_dict = { 
-                    self.features_ : features.reshape([1,self.obs_size]), 
-                    self.init_state_h_ : self.init_state_h
-                    })
+        if action_mask is None:
+            probs, prediction, state_h = self.sess.run( [self.probs, self.prediction, self.state], 
+                    feed_dict = { 
+                        self.features_ : features.reshape([1,self.obs_size]), 
+                        self.init_state_h_ : self.init_state_h,
+                        })
+        else:
+            probs, prediction, state_h = self.sess.run( [self.probs, self.prediction, self.state], 
+                    feed_dict = { 
+                        self.features_ : features.reshape([1,self.obs_size]), 
+                        self.init_state_h_ : self.init_state_h,
+                        self.action_mask_ : action_mask
+                        })
         # maintain state
         self.init_state_h = state_h
         # return argmax
         return probs, prediction
 
     # training
-    def train_step(self, features, action):
-        _, loss_value, state_h = self.sess.run( [self.train_op, self.loss, self.state],
-                feed_dict = {
-                    self.features_ : features.reshape([1, self.obs_size]),
-                    self.action_ : [action],
-                    self.init_state_h_ : self.init_state_h
-                    })
+    def train_step(self, features, action, action_mask=None):
+        if action_mask is None:
+            _, loss_value, state_h = self.sess.run( [self.train_op, self.loss, self.state],
+                    feed_dict = {
+                        self.features_ : features.reshape([1, self.obs_size]),
+                        self.action_ : [action],
+                        self.init_state_h_ : self.init_state_h,
+                        })
+        else:
+            _, loss_value, state_h = self.sess.run( [self.train_op, self.loss, self.state],
+                    feed_dict = {
+                        self.features_ : features.reshape([1, self.obs_size]),
+                        self.action_ : [action],
+                        self.init_state_h_ : self.init_state_h,
+                        self.action_mask_ : action_mask
+                        }) 
         # maintain state
         self.init_state_h = state_h
         return loss_value

@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 from tensorflow.contrib.layers import xavier_initializer as xav
 
-class MultiLSTM():
+class BidirectionalLSTM():
 
     def __init__(self, obs_size, nb_hidden=128, action_size=16, lang='eng', is_action_mask=False):
 
@@ -31,7 +31,7 @@ class MultiLSTM():
             # entry points
             features_ = tf.placeholder(tf.float32, [1, obs_size], name='input_features')
             init_state_c_, init_state_h_ = ( tf.placeholder(tf.float32, [1, nb_hidden]) for _ in range(2) )
-            init_state_cc_, init_state_hh_ = ( tf.placeholder(tf.float32, [1, nb_hidden]) for _ in range(2) )
+            
             action_ = tf.placeholder(tf.int32, name='ground_truth_action')
             if self.is_action_mask:
                 action_mask_ = tf.placeholder(tf.float32, [action_size], name='action_mask')
@@ -41,19 +41,25 @@ class MultiLSTM():
             bi = tf.get_variable('bi', [nb_hidden], initializer=tf.constant_initializer(0.))
             
             projected_features = tf.matmul(features_, Wi) + bi
-            ########################################################################
 
-            lstm_f = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
-            multi_cell = tf.contrib.rnn.MultiRNNCell([lstm_f]*2)
-            # init_state_cc_, init_state_hh_ = ( tf.placeholder(tf.float32, [1, nb_hidden]) for _ in range(2) )
-            lstm_op, state = multi_cell(inputs=projected_features, state=( (init_state_c_, init_state_h_), (init_state_cc_, init_state_hh_) ))
+            cell_fw = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
+            cell_bw = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
+            output = tf.nn.static_bidirectional_rnn(cell_fw, cell_bw,
+                                                        inputs=[projected_features],
+                                                        # initial_state_fw=([init_state_c_],[init_state_h_]),
+                                                        # initial_state_bw=([init_state_cc_],[init_state_hh_]),
+                                                        sequence_length=[1],
+                                                        dtype=tf.float32)
 
+
+            _, output_state_fw, output_state_bw = output
+            
             # ouput projection - 아웃풋 dimention을 맞춰주기 위한 trick ###########
-            state_reshaped = tf.concat(axis=1, values=(state[0].c, state[0].h, state[1].c, state[1].h))
+            state_reshaped = tf.concat(axis=1, values=(output_state_fw.c, output_state_fw.h, output_state_bw.c, output_state_bw.h))
 
             Wo = tf.get_variable('Wo', [4*nb_hidden, action_size], initializer=xav())
             bo = tf.get_variable('bo', [action_size], initializer=tf.constant_initializer(0.))
-            
+
             logits = tf.matmul(state_reshaped, Wo) + bo
             ########################################################################
 
@@ -74,15 +80,13 @@ class MultiLSTM():
             self.prediction = prediction
             self.probs = probs
             self.logits = logits
-            self.state = state
+            # self.state = state
             self.train_op = train_op
 
             # attach placeholder
             self.features_ = features_
             self.init_state_c_ = init_state_c_
             self.init_state_h_ = init_state_h_
-            self.init_state_cc_ = init_state_cc_
-            self.init_state_hh_ = init_state_hh_
             self.action_ = action_
             if self.is_action_mask:
                 self.action_mask_ = action_mask_
@@ -94,79 +98,54 @@ class MultiLSTM():
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
         self.sess = sess
-        
         # set init state to zeros
         self.init_state_c = np.zeros([1,self.nb_hidden], dtype=np.float32)
         self.init_state_h = np.zeros([1,self.nb_hidden], dtype=np.float32)
-        self.init_state_hh = np.zeros([1,self.nb_hidden], dtype=np.float32)
-        self.init_state_cc = np.zeros([1,self.nb_hidden], dtype=np.float32)
 
     # forward propagation
     def forward(self, features, action_mask=None):
         # forward
         if action_mask is None:
-            probs, prediction, state_c, state_h, state_cc, state_hh = self.sess.run( [self.probs, self.prediction, self.state[0].c, self.state[0].h, self.state[1].c, self.state[1].h], 
+            probs, prediction = self.sess.run( [self.probs, self.prediction], 
                     feed_dict = { 
-                        self.features_ : features.reshape([1,self.obs_size]), 
-                        self.init_state_c_ : self.init_state_c,
-                        self.init_state_h_ : self.init_state_h,
-                        self.init_state_cc_ : self.init_state_cc,
-                        self.init_state_hh_ : self.init_state_hh,
+                        self.features_ : features.reshape([1,self.obs_size]),
                         })
         else:
-            probs, prediction, state_c, state_h, state_cc, state_hh = self.sess.run( [self.probs, self.prediction, self.state[0].c, self.state[0].h, self.state[1].c, self.state[1].h], 
+            probs, prediction = self.sess.run( [self.probs, self.prediction], 
                     feed_dict = { 
-                        self.features_ : features.reshape([1,self.obs_size]), 
-                        self.init_state_c_ : self.init_state_c,
-                        self.init_state_h_ : self.init_state_h,
-                        self.init_state_cc_ : self.init_state_cc,
-                        self.init_state_hh_ : self.init_state_hh,
+                        self.features_ : features.reshape([1,self.obs_size]),
                         self.action_mask_ : action_mask
-                        })
+                        }) 
         # maintain state
-        self.init_state_c = state_c
-        self.init_state_h = state_h
-        self.init_state_cc = state_cc
-        self.init_state_hh = state_hh
+        # self.init_state_c = state_c
+        # self.init_state_h = state_h
         # return argmax
         return probs, prediction
 
     # training
     def train_step(self, features, action, action_mask=None):
         if action_mask is None:
-            _, loss_value, state_c, state_h, state_cc, state_hh = self.sess.run( [self.train_op, self.loss, self.state[0].c, self.state[0].h, self.state[1].c, self.state[1].h],
+            _, loss_value = self.sess.run( [self.train_op, self.loss],
                     feed_dict = {
                         self.features_ : features.reshape([1, self.obs_size]),
                         self.action_ : [action],
-                        self.init_state_c_ : self.init_state_c,
-                        self.init_state_h_ : self.init_state_h,
-                        self.init_state_cc_ : self.init_state_cc,
-                        self.init_state_hh_ : self.init_state_hh,
                         })
         else:
-            _, loss_value, state_c, state_h, state_cc, state_hh = self.sess.run( [self.train_op, self.loss, self.state[0].c, self.state[0].h, self.state[1].c, self.state[1].h],
+            _, loss_value = self.sess.run( [self.train_op, self.loss],
                     feed_dict = {
                         self.features_ : features.reshape([1, self.obs_size]),
                         self.action_ : [action],
-                        self.init_state_c_ : self.init_state_c,
-                        self.init_state_h_ : self.init_state_h,
-                        self.init_state_cc_ : self.init_state_cc,
-                        self.init_state_hh_ : self.init_state_hh,
                         self.action_mask_ : action_mask
-                        }) 
+                        })
         # maintain state
-        self.init_state_c = state_c
-        self.init_state_h = state_h
-        self.init_state_cc = state_cc
-        self.init_state_hh = state_hh
+        # self.init_state_c = state_c
+        # self.init_state_h = state_h
         return loss_value
 
     def reset_state(self):
         # set init state to zeros
         self.init_state_c = np.zeros([1,self.nb_hidden], dtype=np.float32)
         self.init_state_h = np.zeros([1,self.nb_hidden], dtype=np.float32)
-        self.init_state_hh = np.zeros([1,self.nb_hidden], dtype=np.float32)
-        self.init_state_cc = np.zeros([1,self.nb_hidden], dtype=np.float32)
 
     def save(self):
         saver = tf.train.Saver()
@@ -182,6 +161,5 @@ class MultiLSTM():
         else:
             rospy.logwarn('no checkpoint found...\n')
 
-
-
-            
+if __name__ == "__main__":
+    b = BidirectionalLSTM(100)

@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 #-*- encoding: utf8 -*-
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import rospy
 
 from mind_msgs.msg import Reply, RaisingEvents, DBQuery
@@ -26,6 +30,7 @@ class Node():
     def handle_input(self, utterance):
         utter_pub = RaisingEvents()
         utter_pub.header.stamp = rospy.Time.now()
+        # utter_pub.recognized_word = unicode(utterance)
         utter_pub.recognized_word = utterance
 
         self.utter_pub.publish(utter_pub)
