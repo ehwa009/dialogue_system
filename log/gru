@@ -1,432 +1,221 @@
-2018-11-23 22:21:51,226:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: eng, action_mask: True)
-2018-11-23 22:21:51,227:INFO: training started.
-2018-11-23 22:22:11,076:INFO: 
+2018-11-27 13:53:59,894:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: kor, action_mask: True)
+2018-11-27 13:53:59,895:INFO: training started.
+2018-11-27 13:53:59,911:WARNING: no checkpoint found...
 
- 1.tr loss [1.9707656]
-2018-11-23 22:22:16,084:INFO: 1.dev accuracy 0.619344322344, response accuracy 0.9
+2018-11-27 13:54:11,371:INFO: 
 
-2018-11-23 22:22:35,863:INFO: 
+ 1.tr loss [2.345245]
+2018-11-27 13:54:13,954:INFO: 1.dev accuracy 0.31658974359, response accuracy 0.5
 
- 2.tr loss [1.1645645]
-2018-11-23 22:22:40,827:INFO: 2.dev accuracy 0.759296703297, response accuracy 1.0
+2018-11-27 13:54:25,341:INFO: 
 
-2018-11-23 22:23:00,599:INFO: 
+ 2.tr loss [2.0993426]
+2018-11-27 13:54:28,554:INFO: 2.dev accuracy 0.396794871795, response accuracy 0.6
 
- 3.tr loss [0.7663225]
-2018-11-23 22:23:05,498:INFO: 3.dev accuracy 0.805238095238, response accuracy 1.0
+2018-11-27 13:54:39,893:INFO: 
 
-2018-11-23 22:23:25,275:INFO: 
+ 3.tr loss [1.7847399]
+2018-11-27 13:54:42,472:INFO: 3.dev accuracy 0.584157509158, response accuracy 0.9
 
- 4.tr loss [0.5706866]
-2018-11-23 22:23:30,246:INFO: 4.dev accuracy 0.835435897436, response accuracy 1.0
+2018-11-27 13:54:54,492:INFO: 
 
-2018-11-23 22:23:50,046:INFO: 
+ 4.tr loss [1.4674345]
+2018-11-27 13:54:57,056:INFO: 4.dev accuracy 0.703161172161, response accuracy 1.0
 
- 5.tr loss [0.44662148]
-2018-11-23 22:23:54,922:INFO: 5.dev accuracy 0.863146520147, response accuracy 1.0
+2018-11-27 13:55:08,408:INFO: 
 
-2018-11-23 22:24:14,845:INFO: 
+ 5.tr loss [1.1932845]
+2018-11-27 13:55:10,997:INFO: 5.dev accuracy 0.735545787546, response accuracy 1.0
 
- 6.tr loss [0.3579166]
-2018-11-23 22:24:19,734:INFO: 6.dev accuracy 0.898772893773, response accuracy 1.0
+2018-11-27 13:55:23,013:INFO: 
 
-2018-11-23 22:24:39,547:INFO: 
+ 6.tr loss [0.9739548]
+2018-11-27 13:55:25,609:INFO: 6.dev accuracy 0.765223443223, response accuracy 1.0
 
- 7.tr loss [0.29048386]
-2018-11-23 22:24:44,561:INFO: 7.dev accuracy 0.924673992674, response accuracy 1.0
+2018-11-27 13:55:37,063:INFO: 
 
-2018-11-23 22:25:04,371:INFO: 
+ 7.tr loss [0.8123111]
+2018-11-27 13:55:40,299:INFO: 7.dev accuracy 0.787868131868, response accuracy 1.0
 
- 8.tr loss [0.23737384]
-2018-11-23 22:25:09,224:INFO: 8.dev accuracy 0.938007326007, response accuracy 1.0
+2018-11-27 13:55:51,840:INFO: 
 
-2018-11-23 22:25:28,944:INFO: 
+ 8.tr loss [0.6927851]
+2018-11-27 13:55:54,424:INFO: 8.dev accuracy 0.800417582418, response accuracy 1.0
 
- 9.tr loss [0.19540578]
-2018-11-23 22:25:33,944:INFO: 9.dev accuracy 0.963512820513, response accuracy 1.0
+2018-11-27 13:56:06,508:INFO: 
 
-2018-11-23 22:25:53,790:INFO: 
+ 9.tr loss [0.59781104]
+2018-11-27 13:56:09,069:INFO: 9.dev accuracy 0.817985347985, response accuracy 1.0
 
- 10.tr loss [0.16272257]
-2018-11-23 22:25:58,680:INFO: 10.dev accuracy 0.97258974359, response accuracy 1.0
+2018-11-27 13:56:20,501:INFO: 
 
-2018-11-23 22:26:18,546:INFO: 
+ 10.tr loss [0.5222466]
+2018-11-27 13:56:23,102:INFO: 10.dev accuracy 0.825919413919, response accuracy 1.0
 
- 11.tr loss [0.13737796]
-2018-11-23 22:26:23,423:INFO: 11.dev accuracy 0.972128205128, response accuracy 1.0
+2018-11-27 13:56:35,499:INFO: 
 
-2018-11-23 22:26:43,181:INFO: 
+ 11.tr loss [0.46115988]
+2018-11-27 13:56:38,086:INFO: 11.dev accuracy 0.834948717949, response accuracy 1.0
 
- 12.tr loss [0.11746106]
-2018-11-23 22:26:48,176:INFO: 12.dev accuracy 0.972128205128, response accuracy 1.0
+2018-11-27 13:56:49,638:INFO: 
 
-2018-11-23 22:27:07,974:INFO: 
+ 12.tr loss [0.40910068]
+2018-11-27 13:56:52,883:INFO: 12.dev accuracy 0.840901098901, response accuracy 1.0
 
- 13.tr loss [0.10146117]
-2018-11-23 22:27:12,820:INFO: 13.dev accuracy 0.974128205128, response accuracy 1.0
+2018-11-27 13:57:04,248:INFO: 
 
-2018-11-23 22:27:32,547:INFO: 
+ 13.tr loss [0.3640541]
+2018-11-27 13:57:06,878:INFO: 13.dev accuracy 0.858135531136, response accuracy 1.0
 
- 14.tr loss [0.08830065]
-2018-11-23 22:27:37,526:INFO: 14.dev accuracy 0.982461538462, response accuracy 1.0
+2018-11-27 13:57:18,339:INFO: 
 
-2018-11-23 22:27:57,282:INFO: 
+ 14.tr loss [0.32470852]
+2018-11-27 13:57:21,681:INFO: 14.dev accuracy 0.889545787546, response accuracy 1.0
 
- 15.tr loss [0.07722528]
-2018-11-23 22:28:02,176:INFO: 15.dev accuracy 0.982461538462, response accuracy 1.0
+2018-11-27 13:57:33,063:INFO: 
 
-2018-11-23 22:28:22,395:INFO: 
+ 15.tr loss [0.29031885]
+2018-11-27 13:57:35,635:INFO: 15.dev accuracy 0.906545787546, response accuracy 1.0
 
- 16.tr loss [0.06771547]
-2018-11-23 22:28:27,299:INFO: 16.dev accuracy 0.991128205128, response accuracy 1.0
+2018-11-27 13:57:47,756:INFO: 
 
-2018-11-23 22:28:47,110:INFO: 
+ 16.tr loss [0.26028788]
+2018-11-27 13:57:50,355:INFO: 16.dev accuracy 0.933179487179, response accuracy 1.0
 
- 17.tr loss [0.05941612]
-2018-11-23 22:28:52,092:INFO: 17.dev accuracy 0.992794871795, response accuracy 1.0
+2018-11-27 13:58:01,775:INFO: 
 
-2018-11-23 22:29:11,894:INFO: 
+ 17.tr loss [0.23409986]
+2018-11-27 13:58:05,019:INFO: 17.dev accuracy 0.933179487179, response accuracy 1.0
 
- 18.tr loss [0.05208144]
-2018-11-23 22:29:16,781:INFO: 18.dev accuracy 0.994794871795, response accuracy 1.0
+2018-11-27 13:58:16,398:INFO: 
 
-2018-11-23 22:29:36,574:INFO: 
+ 18.tr loss [0.21156913]
+2018-11-27 13:58:18,968:INFO: 18.dev accuracy 0.938717948718, response accuracy 1.0
 
- 19.tr loss [0.04553689]
-2018-11-23 22:29:41,546:INFO: 19.dev accuracy 0.996794871795, response accuracy 1.0
+2018-11-27 13:58:30,320:INFO: 
 
-2018-11-23 22:30:01,339:INFO: 
+ 19.tr loss [0.19180948]
+2018-11-27 13:58:33,529:INFO: 19.dev accuracy 0.944051282051, response accuracy 1.0
 
- 20.tr loss [0.03966091]
-2018-11-23 22:30:06,198:INFO: 20.dev accuracy 0.996794871795, response accuracy 1.0
+2018-11-27 13:58:44,915:INFO: 
 
-2018-11-23 22:30:06,253:WARNING: saved to ckpt/hcn.ckpt
+ 20.tr loss [0.17430896]
+2018-11-27 13:58:47,484:INFO: 20.dev accuracy 0.949923076923, response accuracy 1.0
 
-2018-11-23 22:30:06,253:INFO: signal_shutdown [training finish]
-2018-11-23 22:30:06,255:INFO: topic[/rosout] removing connection to /rosout
-2018-11-23 22:30:06,255:INFO: training finish
-2018-11-23 22:30:06,371:INFO: signal_shutdown [atexit]
-2018-11-23 23:18:36,407:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: kor, action_mask: True)
-2018-11-23 23:18:36,407:INFO: training started.
-2018-11-23 23:18:47,971:INFO: 
+2018-11-27 13:58:47,540:WARNING: saved to ckpt/hcn.ckpt
 
- 1.tr loss [2.3893495]
-2018-11-23 23:18:50,607:INFO: 1.dev accuracy 0.319893772894, response accuracy 0.416666666667
+2018-11-27 13:58:47,540:INFO: signal_shutdown [training finish]
+2018-11-27 13:58:47,542:INFO: topic[/rosout] removing connection to /rosout
+2018-11-27 13:58:47,542:INFO: training finish
+2018-11-27 13:58:47,646:INFO: signal_shutdown [atexit]
+2018-11-27 14:03:31,846:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: kor, action_mask: True)
+2018-11-27 14:03:31,846:INFO: training started.
+2018-11-27 14:03:31,862:WARNING: restoring checkpoint from/home/ehwa009/catkin_ws/nao_ws/src/dialogue_system/ckpt_kor/hcn.ckpt-0
 
-2018-11-23 23:19:02,138:INFO: 
+2018-11-27 14:03:31,863:INFO: Restoring parameters from /home/ehwa009/catkin_ws/nao_ws/src/dialogue_system/ckpt_kor/hcn.ckpt-0
+2018-11-27 14:03:43,270:INFO: 
 
- 2.tr loss [2.1716576]
-2018-11-23 23:19:05,426:INFO: 2.dev accuracy 0.413644688645, response accuracy 0.615384615385
+ 1.tr loss [0.15909041]
+2018-11-27 14:03:45,817:INFO: 1.dev accuracy 0.963256410256, response accuracy 1.0
 
-2018-11-23 23:19:16,942:INFO: 
+2018-11-27 14:03:57,165:INFO: 
 
- 3.tr loss [1.8886577]
-2018-11-23 23:19:19,561:INFO: 3.dev accuracy 0.56458974359, response accuracy 0.9
+ 2.tr loss [0.14602411]
+2018-11-27 14:04:00,371:INFO: 2.dev accuracy 0.965256410256, response accuracy 1.0
 
-2018-11-23 23:19:31,664:INFO: 
+2018-11-27 14:04:11,781:INFO: 
 
- 4.tr loss [1.5581359]
-2018-11-23 23:19:34,284:INFO: 4.dev accuracy 0.664362637363, response accuracy 1.0
+ 3.tr loss [0.13436799]
+2018-11-27 14:04:14,345:INFO: 3.dev accuracy 0.967256410256, response accuracy 1.0
 
-2018-11-23 23:19:45,776:INFO: 
+2018-11-27 14:04:26,349:INFO: 
 
- 5.tr loss [1.2652222]
-2018-11-23 23:19:48,383:INFO: 5.dev accuracy 0.72521978022, response accuracy 1.0
+ 4.tr loss [0.12374935]
+2018-11-27 14:04:28,886:INFO: 4.dev accuracy 0.969256410256, response accuracy 1.0
 
-2018-11-23 23:20:00,516:INFO: 
+2018-11-27 14:04:40,268:INFO: 
 
- 6.tr loss [1.0255293]
-2018-11-23 23:20:03,146:INFO: 6.dev accuracy 0.767102564103, response accuracy 1.0
+ 5.tr loss [0.11423126]
+2018-11-27 14:04:42,829:INFO: 5.dev accuracy 0.971256410256, response accuracy 1.0
 
-2018-11-23 23:20:14,656:INFO: 
+2018-11-27 14:05:05,463:INFO: 
 
- 7.tr loss [0.8433389]
-2018-11-23 23:20:17,919:INFO: 7.dev accuracy 0.7863003663, response accuracy 1.0
+ 6.tr loss [0.10582982]
+2018-11-27 14:05:08,043:INFO: 6.dev accuracy 0.971256410256, response accuracy 1.0
 
-2018-11-23 23:20:29,407:INFO: 
+2018-11-27 14:05:19,421:INFO: 
 
- 8.tr loss [0.7132114]
-2018-11-23 23:20:32,013:INFO: 8.dev accuracy 0.792582417582, response accuracy 1.0
+ 7.tr loss [0.09840209]
+2018-11-27 14:05:22,633:INFO: 7.dev accuracy 0.971256410256, response accuracy 1.0
 
-2018-11-23 23:20:44,196:INFO: 
+2018-11-27 14:05:34,016:INFO: 
 
- 9.tr loss [0.61540157]
-2018-11-23 23:20:46,794:INFO: 9.dev accuracy 0.811542124542, response accuracy 1.0
+ 8.tr loss [0.09180459]
+2018-11-27 14:05:36,590:INFO: 8.dev accuracy 0.973256410256, response accuracy 1.0
 
-2018-11-23 23:20:58,294:INFO: 
+2018-11-27 14:05:48,668:INFO: 
 
- 10.tr loss [0.5364754]
-2018-11-23 23:21:00,930:INFO: 10.dev accuracy 0.832282051282, response accuracy 1.0
+ 9.tr loss [0.08585598]
+2018-11-27 14:05:51,224:INFO: 9.dev accuracy 0.973256410256, response accuracy 1.0
 
-2018-11-23 23:21:13,086:INFO: 
+2018-11-27 14:06:02,656:INFO: 
 
- 11.tr loss [0.47045174]
-2018-11-23 23:21:15,712:INFO: 11.dev accuracy 0.842501831502, response accuracy 1.0
+ 10.tr loss [0.08036197]
+2018-11-27 14:06:05,218:INFO: 10.dev accuracy 0.975256410256, response accuracy 1.0
 
-2018-11-23 23:21:27,251:INFO: 
+2018-11-27 14:06:17,253:INFO: 
 
- 12.tr loss [0.4138189]
-2018-11-23 23:21:30,528:INFO: 12.dev accuracy 0.858307692308, response accuracy 1.0
+ 11.tr loss [0.07536425]
+2018-11-27 14:06:19,819:INFO: 11.dev accuracy 0.976923076923, response accuracy 1.0
 
-2018-11-23 23:21:41,996:INFO: 
+2018-11-27 14:06:31,192:INFO: 
 
- 13.tr loss [0.3657616]
-2018-11-23 23:21:44,634:INFO: 13.dev accuracy 0.875783882784, response accuracy 1.0
+ 12.tr loss [0.07096681]
+2018-11-27 14:06:34,393:INFO: 12.dev accuracy 0.980461538462, response accuracy 1.0
 
-2018-11-23 23:21:56,169:INFO: 
+2018-11-27 14:06:45,872:INFO: 
 
- 14.tr loss [0.3235587]
-2018-11-23 23:21:59,429:INFO: 14.dev accuracy 0.886974358974, response accuracy 1.0
+ 13.tr loss [0.0668501]
+2018-11-27 14:06:48,455:INFO: 13.dev accuracy 0.980461538462, response accuracy 1.0
 
-2018-11-23 23:22:10,943:INFO: 
+2018-11-27 14:06:59,987:INFO: 
 
- 15.tr loss [0.2868716]
-2018-11-23 23:22:13,576:INFO: 15.dev accuracy 0.908974358974, response accuracy 1.0
+ 14.tr loss [0.06291625]
+2018-11-27 14:07:03,243:INFO: 14.dev accuracy 0.980461538462, response accuracy 1.0
 
-2018-11-23 23:22:25,664:INFO: 
+2018-11-27 14:07:14,621:INFO: 
 
- 16.tr loss [0.25521573]
-2018-11-23 23:22:28,293:INFO: 16.dev accuracy 0.919179487179, response accuracy 1.0
+ 15.tr loss [0.05921924]
+2018-11-27 14:07:17,191:INFO: 15.dev accuracy 0.980461538462, response accuracy 1.0
 
-2018-11-23 23:22:39,816:INFO: 
+2018-11-27 14:07:29,229:INFO: 
 
- 17.tr loss [0.22807136]
-2018-11-23 23:22:43,083:INFO: 17.dev accuracy 0.924846153846, response accuracy 1.0
+ 16.tr loss [0.0557422]
+2018-11-27 14:07:31,886:INFO: 16.dev accuracy 0.982128205128, response accuracy 1.0
 
-2018-11-23 23:22:54,632:INFO: 
+2018-11-27 14:07:43,462:INFO: 
 
- 18.tr loss [0.20440437]
-2018-11-23 23:22:57,223:INFO: 18.dev accuracy 0.926512820513, response accuracy 1.0
+ 17.tr loss [0.05245035]
+2018-11-27 14:07:46,662:INFO: 17.dev accuracy 0.986128205128, response accuracy 1.0
 
-2018-11-23 23:23:08,688:INFO: 
+2018-11-27 14:07:58,043:INFO: 
 
- 19.tr loss [0.1837001]
-2018-11-23 23:23:11,943:INFO: 19.dev accuracy 0.946512820513, response accuracy 1.0
+ 18.tr loss [0.04937535]
+2018-11-27 14:08:00,622:INFO: 18.dev accuracy 0.986128205128, response accuracy 1.0
 
-2018-11-23 23:23:23,416:INFO: 
+2018-11-27 14:08:11,983:INFO: 
 
- 20.tr loss [0.16555656]
-2018-11-23 23:23:26,017:INFO: 20.dev accuracy 0.954846153846, response accuracy 1.0
+ 19.tr loss [0.04657612]
+2018-11-27 14:08:15,204:INFO: 19.dev accuracy 0.986128205128, response accuracy 1.0
 
-2018-11-23 23:23:26,069:WARNING: saved to ckpt/hcn.ckpt
+2018-11-27 14:08:26,598:INFO: 
 
-2018-11-23 23:23:26,069:INFO: signal_shutdown [training finish]
-2018-11-23 23:23:26,071:INFO: topic[/rosout] removing connection to /rosout
-2018-11-23 23:23:26,071:INFO: training finish
-2018-11-23 23:23:26,179:INFO: signal_shutdown [atexit]
-2018-11-23 23:25:09,286:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: kor, action_mask: False)
-2018-11-23 23:25:09,287:INFO: training started.
-2018-11-23 23:25:20,514:INFO: 
+ 20.tr loss [0.04402179]
+2018-11-27 14:08:29,168:INFO: 20.dev accuracy 0.986128205128, response accuracy 1.0
 
- 1.tr loss [2.3376327]
-2018-11-23 23:25:23,085:INFO: 1.dev accuracy 0.279864468864, response accuracy 0.5
+2018-11-27 14:08:29,224:WARNING: saved to ckpt/hcn.ckpt
 
-2018-11-23 23:25:34,370:INFO: 
-
- 2.tr loss [2.0759914]
-2018-11-23 23:25:37,597:INFO: 2.dev accuracy 0.393824175824, response accuracy 0.6
-
-2018-11-23 23:25:48,869:INFO: 
-
- 3.tr loss [1.761019]
-2018-11-23 23:25:51,432:INFO: 3.dev accuracy 0.612611721612, response accuracy 0.9
-
-2018-11-23 23:26:03,295:INFO: 
-
- 4.tr loss [1.4506688]
-2018-11-23 23:26:05,847:INFO: 4.dev accuracy 0.688882783883, response accuracy 0.9
-
-2018-11-23 23:26:17,128:INFO: 
-
- 5.tr loss [1.1734304]
-2018-11-23 23:26:19,673:INFO: 5.dev accuracy 0.742688644689, response accuracy 1.0
-
-2018-11-23 23:26:31,487:INFO: 
-
- 6.tr loss [0.94387126]
-2018-11-23 23:26:34,039:INFO: 6.dev accuracy 0.764684981685, response accuracy 1.0
-
-2018-11-23 23:26:45,284:INFO: 
-
- 7.tr loss [0.77653396]
-2018-11-23 23:26:48,488:INFO: 7.dev accuracy 0.797201465201, response accuracy 1.0
-
-2018-11-23 23:26:59,725:INFO: 
-
- 8.tr loss [0.6569209]
-2018-11-23 23:27:02,277:INFO: 8.dev accuracy 0.803611721612, response accuracy 1.0
-
-2018-11-23 23:27:14,152:INFO: 
-
- 9.tr loss [0.5679329]
-2018-11-23 23:27:16,705:INFO: 9.dev accuracy 0.828095238095, response accuracy 1.0
-
-2018-11-23 23:27:27,936:INFO: 
-
- 10.tr loss [0.49696937]
-2018-11-23 23:27:30,471:INFO: 10.dev accuracy 0.850534798535, response accuracy 1.0
-
-2018-11-23 23:27:42,353:INFO: 
-
- 11.tr loss [0.44043195]
-2018-11-23 23:27:44,920:INFO: 11.dev accuracy 0.883135531136, response accuracy 1.0
-
-2018-11-23 23:27:56,074:INFO: 
-
- 12.tr loss [0.3950426]
-2018-11-23 23:27:59,272:INFO: 12.dev accuracy 0.890278388278, response accuracy 1.0
-
-2018-11-23 23:28:10,452:INFO: 
-
- 13.tr loss [0.35612404]
-2018-11-23 23:28:13,021:INFO: 13.dev accuracy 0.891706959707, response accuracy 1.0
-
-2018-11-23 23:28:24,509:INFO: 
-
- 14.tr loss [0.3220993]
-2018-11-23 23:28:27,713:INFO: 14.dev accuracy 0.895769230769, response accuracy 1.0
-
-2018-11-23 23:28:38,896:INFO: 
-
- 15.tr loss [0.29209575]
-2018-11-23 23:28:41,427:INFO: 15.dev accuracy 0.899769230769, response accuracy 1.0
-
-2018-11-23 23:28:53,218:INFO: 
-
- 16.tr loss [0.26582217]
-2018-11-23 23:28:55,760:INFO: 16.dev accuracy 0.921307692308, response accuracy 1.0
-
-2018-11-23 23:29:06,897:INFO: 
-
- 17.tr loss [0.2432981]
-2018-11-23 23:29:10,091:INFO: 17.dev accuracy 0.936641025641, response accuracy 1.0
-
-2018-11-23 23:29:21,271:INFO: 
-
- 18.tr loss [0.22266199]
-2018-11-23 23:29:23,812:INFO: 18.dev accuracy 0.929641025641, response accuracy 1.0
-
-2018-11-23 23:29:34,961:INFO: 
-
- 19.tr loss [0.20459114]
-2018-11-23 23:29:38,155:INFO: 19.dev accuracy 0.932974358974, response accuracy 1.0
-
-2018-11-23 23:29:49,309:INFO: 
-
- 20.tr loss [0.18852478]
-2018-11-23 23:29:51,855:INFO: 20.dev accuracy 0.932974358974, response accuracy 1.0
-
-2018-11-23 23:29:51,908:WARNING: saved to ckpt/hcn.ckpt
-
-2018-11-23 23:29:51,908:INFO: signal_shutdown [training finish]
-2018-11-23 23:29:51,910:INFO: topic[/rosout] removing connection to /rosout
-2018-11-23 23:29:51,910:INFO: training finish
-2018-11-23 23:29:52,074:INFO: signal_shutdown [atexit]
-2018-11-24 17:32:27,723:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: eng, action_mask: False)
-2018-11-24 17:32:27,723:INFO: training started.
-2018-11-24 17:32:48,151:INFO: 
-
- 1.tr loss [2.0253828]
-2018-11-24 17:32:53,188:INFO: 1.dev accuracy 0.625230769231, response accuracy 1.0
-
-2018-11-24 17:33:13,545:INFO: 
-
- 2.tr loss [1.2107134]
-2018-11-24 17:33:18,514:INFO: 2.dev accuracy 0.768516483516, response accuracy 1.0
-
-2018-11-24 17:33:38,631:INFO: 
-
- 3.tr loss [0.77130973]
-2018-11-24 17:33:43,603:INFO: 3.dev accuracy 0.813282051282, response accuracy 1.0
-
-2018-11-24 17:34:04,038:INFO: 
-
- 4.tr loss [0.5681941]
-2018-11-24 17:34:09,117:INFO: 4.dev accuracy 0.848435897436, response accuracy 1.0
-
-2018-11-24 17:34:29,509:INFO: 
-
- 5.tr loss [0.4443144]
-2018-11-24 17:34:34,491:INFO: 5.dev accuracy 0.872157509158, response accuracy 1.0
-
-2018-11-24 17:34:54,729:INFO: 
-
- 6.tr loss [0.35523212]
-2018-11-24 17:34:59,694:INFO: 6.dev accuracy 0.886025641026, response accuracy 1.0
-
-2018-11-24 17:35:20,005:INFO: 
-
- 7.tr loss [0.28835168]
-2018-11-24 17:35:25,140:INFO: 7.dev accuracy 0.916769230769, response accuracy 1.0
-
-2018-11-24 17:35:45,602:INFO: 
-
- 8.tr loss [0.23719086]
-2018-11-24 17:35:50,587:INFO: 8.dev accuracy 0.938307692308, response accuracy 1.0
-
-2018-11-24 17:36:10,907:INFO: 
-
- 9.tr loss [0.19747669]
-2018-11-24 17:36:15,995:INFO: 9.dev accuracy 0.952179487179, response accuracy 1.0
-
-2018-11-24 17:36:36,410:INFO: 
-
- 10.tr loss [0.16642018]
-2018-11-24 17:36:41,398:INFO: 10.dev accuracy 0.954179487179, response accuracy 1.0
-
-2018-11-24 17:37:02,005:INFO: 
-
- 11.tr loss [0.14198288]
-2018-11-24 17:37:06,982:INFO: 11.dev accuracy 0.976256410256, response accuracy 1.0
-
-2018-11-24 17:37:27,402:INFO: 
-
- 12.tr loss [0.12257808]
-2018-11-24 17:37:32,515:INFO: 12.dev accuracy 0.977794871795, response accuracy 1.0
-
-2018-11-24 17:37:52,994:INFO: 
-
- 13.tr loss [0.10694069]
-2018-11-24 17:37:57,936:INFO: 13.dev accuracy 0.977794871795, response accuracy 1.0
-
-2018-11-24 17:38:18,005:INFO: 
-
- 14.tr loss [0.09408529]
-2018-11-24 17:38:22,993:INFO: 14.dev accuracy 0.977794871795, response accuracy 1.0
-
-2018-11-24 17:38:43,020:INFO: 
-
- 15.tr loss [0.08327518]
-2018-11-24 17:38:47,968:INFO: 15.dev accuracy 0.977794871795, response accuracy 1.0
-
-2018-11-24 17:39:08,126:INFO: 
-
- 16.tr loss [0.07399368]
-2018-11-24 17:39:13,079:INFO: 16.dev accuracy 0.977794871795, response accuracy 1.0
-
-2018-11-24 17:39:32,789:INFO: 
-
- 17.tr loss [0.06589744]
-2018-11-24 17:39:37,798:INFO: 17.dev accuracy 0.979461538462, response accuracy 1.0
-
-2018-11-24 17:39:57,786:INFO: 
-
- 18.tr loss [0.05874863]
-2018-11-24 17:40:02,787:INFO: 18.dev accuracy 0.979461538462, response accuracy 1.0
-
-2018-11-24 17:40:22,812:INFO: 
-
- 19.tr loss [0.05236479]
-2018-11-24 17:40:27,802:INFO: 19.dev accuracy 0.986128205128, response accuracy 1.0
-
-2018-11-24 17:40:47,748:INFO: 
-
- 20.tr loss [0.04660625]
-2018-11-24 17:40:52,637:INFO: 20.dev accuracy 0.992794871795, response accuracy 1.0
-
-2018-11-24 17:40:52,690:WARNING: saved to ckpt/hcn.ckpt
-
-2018-11-24 17:40:52,691:INFO: signal_shutdown [training finish]
-2018-11-24 17:40:52,692:INFO: topic[/rosout] removing connection to /rosout
-2018-11-24 17:40:52,693:INFO: training finish
-2018-11-24 17:40:52,824:INFO: signal_shutdown [atexit]
+2018-11-27 14:08:29,225:INFO: signal_shutdown [training finish]
+2018-11-27 14:08:29,227:INFO: topic[/rosout] removing connection to /rosout
+2018-11-27 14:08:29,227:INFO: training finish
+2018-11-27 14:08:29,343:INFO: signal_shutdown [atexit]

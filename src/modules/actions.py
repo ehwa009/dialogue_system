@@ -81,7 +81,7 @@ class ActionTracker():
         def construct_mask(ctxt_f):
             indices = self.am_dict[ctxt_f]
             for index in indices:
-                self.am[index-1] = 1.
+                self.am[index] = 1.
             return self.am
     
         return construct_mask(ctxt_f)
