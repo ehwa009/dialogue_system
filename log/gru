@@ -219,3 +219,11 @@
 2018-11-27 14:08:29,227:INFO: topic[/rosout] removing connection to /rosout
 2018-11-27 14:08:29,227:INFO: training finish
 2018-11-27 14:08:29,343:INFO: signal_shutdown [atexit]
+2018-12-13 00:06:35,716:INFO: '[94m[/dialogue_trainer trainer][0m initialized - GRU (input condition: 4, lang: kor, action_mask: True)
+2018-12-13 00:06:35,805:WARNING: restoring checkpoint from/home/eddie/catkin_ws/nao_ws/src/dialogue_system/ckpt_kor/hcn.ckpt-0
+
+2018-12-13 00:06:35,806:INFO: Restoring parameters from /home/eddie/catkin_ws/nao_ws/src/dialogue_system/ckpt_kor/hcn.ckpt-0
+2018-12-13 00:06:39,964:INFO: signal_shutdown [training finish]
+2018-12-13 00:06:39,966:INFO: topic[/rosout] removing connection to /rosout
+2018-12-13 00:06:39,967:INFO: training finish
+2018-12-13 00:06:40,132:INFO: signal_shutdown [atexit]

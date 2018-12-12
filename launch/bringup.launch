@@ -1,16 +1,19 @@
 <launch>
     <arg name="network_model" default="lstm" />
     <arg name="lang" default='eng' />
+    <arg name="action_mask" default="true" />
     
     <!-- english version dialogue system -->
     <node name="dialogue_system" type="node_eng.py" pkg="dialogue_system" output="screen" if="$(eval lang == 'eng')">
         <param name="network_model" value="$(arg network_model)" />
         <param name="lang" value="$(arg lang)" />
+        <param name="action_mask" value="$(arg action_mask)" />
     </node>
     
     <!-- korean version dialogue system -->
     <node name="dialogue_system" type="node_kor.py" pkg="dialogue_system" output="screen" if="$(eval lang == 'kor')">
         <param name="network_model" value="$(arg network_model)" />
         <param name="lang" value="$(arg lang)" />
+        <param name="action_mask" value="$(arg action_mask)" />
     </node>    
 </launch>

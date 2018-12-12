@@ -31,8 +31,8 @@ from modules.rnn_model.inverted_lstm_model import InvertedLSTM
 from modules.rnn_model.multi_gru_model import MultiGRU
 from modules.rnn_model.multi_lstm_model import MultiLSTM
 
-from mind_msgs.msg import Reply, RaisingEvents, DBQuery
-from mind_msgs.srv import ReloadWithResult, ReadData, WriteData
+from mind_msgs.msg import Reply, RaisingEvents
+from mind_msgs.srv import ReloadWithResult, ReadData, WriteData, DBQuery
 
 class Dialogue():
 
@@ -40,6 +40,7 @@ class Dialogue():
         # selected network and langauge
         network = rospy.get_param('~network_model', 'lstm')
         lang = rospy.get_param('~lang', 'kor')
+        self.is_action_mask = rospy.get_param('~action_mask', "true")
 
         self.et = EntityTracker()
         self.at = ActionTracker(self.et)
@@ -58,17 +59,17 @@ class Dialogue():
         nb_hidden = 128
 
         if network == 'hcn_lstm':
-            self.net = HCN_LSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = HCN_LSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         elif network == 'gru':
-            self.net = GRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = GRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         elif network == 'inverted_gru':
-            self.net = InvertedGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = InvertedGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         elif network == 'inverted_lstm':
-            self.net = InvertedLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = InvertedLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         elif network == 'multi_gru':
-            self.net = MultiGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = MultiGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         elif network == 'multi_lstm':
-            self.net = MultiLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang)
+            self.net = MultiLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
         
         # restore trained file
         self.net.restore()
@@ -77,6 +78,14 @@ class Dialogue():
         # self.pub_qeury = rospy.Publisher('query', DBQuery, queue_size=10)
 
         rospy.Subscriber('raising_events', RaisingEvents, self.handle_raise_events)
+        
+        try:
+            rospy.wait_for_service('reception_db/query_data')
+            self.get_response_db = rospy.ServiceProxy('reception_db/query_data', DBQuery)
+        except rospy.exceptions.ROSInterruptException as e:
+            rospy.logerr(e)
+            quit()
+        
         rospy.loginfo('\033[94m[%s]\033[0m initialized.'%rospy.get_name())
 
     def handle_raise_events(self, msg):
@@ -98,15 +107,21 @@ class Dialogue():
             u_ent_features = self.et.context_features()
             u_emb = self.emb.encode(utterance)
             u_bow = self.bow_enc.encode(utterance)
-            # action_mask = self.at.action_mask()
+            
+            if self.is_action_mask:
+                action_mask = self.at.action_mask()
 
             # print(u_ent_features)
             # print(u_emb)
             # print(u_bow)
 
             features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-            # probs, prediction = self.net.forward(features, action_mask)
-            probs, prediction = self.net.forward(features)
+            
+            if self.is_action_mask:
+                probs, prediction = self.net.forward(features, action_mask)
+            else:
+                probs, prediction = self.net.forward(features)
+    
             print('TEST: %d' % prediction)
             
             response = self.action_template[prediction]
@@ -128,7 +143,10 @@ class Dialogue():
                     response = 'api_call 대기시간 {} {} {}'.format(
                         u_entities['<name>'], u_entities['<address>'],
                         u_entities['<time>'])
+                
                 # TODO: implement real api call 
+                response = self.get_response_db(response)
+                response = response.response
 
             else:
                 require_name = [4,7,12]
@@ -145,7 +163,7 @@ class Dialogue():
         # print status of entities and actual response
         rospy.loginfo(json.dumps(self.et.entities, indent=2))
         try:
-            rospy.logwarn("System: [conf: %f, predict: %d] / %s\n" %(max(probs), prediction, response))
+            rospy.logwarn("System: [conf: %f, predict: %d] / %s\n" %(max(probs), prediction, unicode(response)))
         except UnboundLocalError:
             rospy.logwarn("System: [conf: ] / %s\n" %(response))
 
