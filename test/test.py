@@ -22,8 +22,6 @@ class Node():
             if utterance == "exit":
                 rospy.signal_shutdown('exit')
                 break
-            elif utterance == "":
-                utterance = "<SILENCE>"
             
             self.handle_input(utterance)
             
@@ -31,7 +29,10 @@ class Node():
         utter_pub = RaisingEvents()
         utter_pub.header.stamp = rospy.Time.now()
         # utter_pub.recognized_word = unicode(utterance)
-        utter_pub.recognized_word = utterance
+        if utterance == "":
+            utter_pub.events.append("silency_detected")
+        else:
+            utter_pub.recognized_word = utterance
 
         self.utter_pub.publish(utter_pub)
 

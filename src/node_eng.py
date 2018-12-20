@@ -83,9 +83,11 @@ class Dialogue():
         try:
             rospy.wait_for_service('reception_db/query_data')
             self.get_response_db = rospy.ServiceProxy('reception_db/query_data', DBQuery)
+            rospy.logwarn("waiting for reception DB module...")
         except rospy.exceptions.ROSInterruptException as e:
             rospy.logerr(e)
             quit()
+        rospy.logwarn("network: {}, lang: {}, action_mask: {}".format(network, lang, self.is_action_mask))
         rospy.loginfo('\033[94m[%s]\033[0m initialized.'%rospy.get_name())
 
     def handle_raise_events(self, msg):
@@ -100,6 +102,8 @@ class Dialogue():
         else:
             if 'silency_detected' in msg.events:
                 utterance = '<SILENCE>'
+            else:
+                utterance = utterance.lower()
 
             rospy.loginfo("actual input: %s" %utterance)
             
@@ -151,7 +155,8 @@ class Dialogue():
                         u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>']
                     )
                 # TODO: implement real api call
-                response = self.get_response_db(response) 
+                response = self.get_response_db(response)
+                response = response.response 
 
             else:
                 require_name = [7,10,12]

@@ -19,7 +19,7 @@ class EntityTracker():
         }
 
         self.num_features = len(self.entities)
-        self.name = ['황의준', '윤혜정']
+        self.name = ['황의준', '윤혜정', '황희준']
         self.address = ['조례동']
         self.time = ['4시', '3시']
         self.location = ['화장실']

@@ -1,5 +1,5 @@
 <launch>
-    <arg name="network_model" default="lstm" />
+    <arg name="network_model" default="gru" />
     <arg name="lang" default='eng' />
     <arg name="action_mask" default="true" />
     
