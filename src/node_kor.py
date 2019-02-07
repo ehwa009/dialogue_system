@@ -33,10 +33,17 @@ from modules.rnn_model.multi_lstm_model import MultiLSTM
 
 from mind_msgs.msg import Reply, RaisingEvents
 from mind_msgs.srv import ReloadWithResult, ReadData, WriteData, DBQuery
+from std_msgs.msg import Int16, Bool, Empty
+
+REPROMPT = ["잘 못알아 들었어요, 다시한번 알려주시겠어요?", "죄송해요, 다시한번만 말해주세요."]
 
 class Dialogue():
 
     def __init__(self):
+        # count turn taking
+        self.usr_count = 0
+        self.sys_count = 0
+
         # selected network and langauge
         network = rospy.get_param('~network_model', 'lstm')
         lang = rospy.get_param('~lang', 'kor')
@@ -73,9 +80,9 @@ class Dialogue():
         
         # restore trained file
         self.net.restore()
-
         self.pub_reply = rospy.Publisher('reply', Reply, queue_size=10)
         # self.pub_qeury = rospy.Publisher('query', DBQuery, queue_size=10)
+        self.pub_complete = rospy.Publisher('complete_execute_scenario', Empty, queue_size=10)
 
         rospy.Subscriber('raising_events', RaisingEvents, self.handle_raise_events)
         
@@ -85,7 +92,7 @@ class Dialogue():
         except rospy.exceptions.ROSInterruptException as e:
             rospy.logerr(e)
             quit()
-        
+        rospy.logwarn("network: {}, lang: {}, action_mask: {}".format(network, lang, self.is_action_mask))
         rospy.loginfo('\033[94m[%s]\033[0m initialized.'%rospy.get_name())
 
     def handle_raise_events(self, msg):
@@ -100,71 +107,89 @@ class Dialogue():
         else:
             if 'silency_detected' in msg.events:
                 utterance = '<SILENCE>'
+            else:
+                # add user turn
+                self.usr_count += 1
 
             rospy.loginfo("actual input: %s" %utterance)
             
-            u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
-            u_ent_features = self.et.context_features()
-            u_emb = self.emb.encode(utterance)
-            u_bow = self.bow_enc.encode(utterance)
-            
-            if self.is_action_mask:
-                action_mask = self.at.action_mask()
-
-            # print(u_ent_features)
-            # print(u_emb)
-            # print(u_bow)
-
-            features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-            
-            if self.is_action_mask:
-                probs, prediction = self.net.forward(features, action_mask)
-            else:
-                probs, prediction = self.net.forward(features)
-    
-            print('TEST: %d' % prediction)
-            
-            response = self.action_template[prediction]
-
-            # check validity
-            prediction = self.pre_action_process(prediction, u_entities)
-            
-            if self.post_process(prediction, u_entities):
-                if prediction == 1:
-                    response = 'api_call 예약 {} {} {}'.format(
-                        u_entities['<name>'], u_entities['<address>'],
-                        u_entities['<time>'])
-                elif prediction == 2:
-                    response = 'api_call 위치 {}'.format(u_entities['<location>'])
-                elif prediction == 3:
-                    response = 'api_call 처방전 {} {}'.format(
-                        u_entities['<name>'], u_entities['<address>'])
-                elif prediction == 0:
-                    response = 'api_call 대기시간 {} {} {}'.format(
-                        u_entities['<name>'], u_entities['<address>'],
-                        u_entities['<time>'])
+            try:
+                u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
+                u_ent_features = self.et.context_features()
+                u_emb = self.emb.encode(utterance)
+                u_bow = self.bow_enc.encode(utterance)
                 
-                # TODO: implement real api call 
-                response = self.get_response_db(response)
-                response = response.response
+                if self.is_action_mask:
+                    action_mask = self.at.action_mask()
 
-            else:
-                require_name = [4,7,12]
-                prediction = self.action_post_process(prediction, u_entities)
+                # print(u_ent_features)
+                # print(u_emb)
+                # print(u_bow)
 
-                if prediction in require_name:
-                    response = self.action_template[prediction]
-                    response = response.split(' ')
-                    response = [word.replace('<name>', u_entities['<name>']) for word in response]
-                    response = ' '.join(response)
+                features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
+                
+                if self.is_action_mask:
+                    probs, prediction = self.net.forward(features, action_mask)
                 else:
+                    probs, prediction = self.net.forward(features)
+        
+                # check response confidence
+                if max(probs) > 0.5:
+                    print('TEST: %d' % prediction)
+                    
                     response = self.action_template[prediction]
 
+                    # add system turn
+                    self.sys_count += 1
+
+                    # check validity
+                    prediction = self.pre_action_process(prediction, u_entities)
+
+                    if (prediction == 11) or (prediction == 12):
+                        self.pub_complete.publish()
+                        # logging user and system turn
+                        rospy.logwarn("user: %i, system: %i"%(self.usr_count, self.sys_count))
+                    
+                    if self.post_process(prediction, u_entities):
+                        if prediction == 1:
+                            response = 'api_call 예약 {} {} {}'.format(
+                                u_entities['<name>'], u_entities['<address>'],
+                                u_entities['<time>'])
+                        elif prediction == 2:
+                            response = 'api_call 위치 {}'.format(u_entities['<location>'])
+                        elif prediction == 3:
+                            response = 'api_call 처방전 {} {}'.format(
+                                u_entities['<name>'], u_entities['<address>'])
+                        elif prediction == 0:
+                            response = 'api_call 대기시간 {} {} {}'.format(
+                                u_entities['<name>'], u_entities['<address>'],
+                                u_entities['<time>'])
+                        
+                        # TODO: implement real api call 
+                        response = self.get_response_db(response)
+                        response = response.response
+
+                    else:
+                        require_name = [4,7,12]
+                        prediction = self.action_post_process(prediction, u_entities)
+
+                        if prediction in require_name:
+                            response = self.action_template[prediction]
+                            response = response.split(' ')
+                            response = [word.replace('<name>', u_entities['<name>']) for word in response]
+                            response = ' '.join(response)
+                        else:
+                            response = self.action_template[prediction]
+                else:
+                    response = random.choice(REPROMPT)
+            except:
+                response = random.choice(REPROMPT)
+                
         # print status of entities and actual response
         rospy.loginfo(json.dumps(self.et.entities, indent=2))
         try:
             rospy.logwarn("System: [conf: %f, predict: %d] / %s\n" %(max(probs), prediction, unicode(response)))
-        except UnboundLocalError:
+        except:
             rospy.logwarn("System: [conf: ] / %s\n" %(response))
 
         reply_msg = Reply()
