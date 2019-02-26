@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 #-*- encoding: utf8 -*-
 
-import modules.util as util
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+# import modules.util_kor as util
+import util_kor as util
 import numpy as np
 
 class BoW_encoder():

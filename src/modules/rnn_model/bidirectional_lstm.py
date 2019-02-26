@@ -44,43 +44,41 @@ class BidirectionalLSTM():
 
             cell_fw = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
             cell_bw = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
-            output = tf.nn.static_bidirectional_rnn(cell_fw, cell_bw,
-                                                        inputs=[projected_features],
-                                                        # initial_state_fw=([init_state_c_],[init_state_h_]),
-                                                        # initial_state_bw=([init_state_cc_],[init_state_hh_]),
-                                                        sequence_length=[1],
-                                                        dtype=tf.float32)
-
-
-            _, output_state_fw, output_state_bw = output
             
-            # ouput projection - 아웃풋 dimention을 맞춰주기 위한 trick ###########
-            state_reshaped = tf.concat(axis=1, values=(output_state_fw.c, output_state_fw.h, output_state_bw.c, output_state_bw.h))
+            outputs, output_state_fw, output_state_bw = tf.nn.static_bidirectional_rnn(
+                                                            cell_fw=cell_fw, 
+                                                            cell_bw=cell_bw,
+                                                            inputs=[projected_features],
+                                                            dtype=tf.float32)
 
-            Wo = tf.get_variable('Wo', [4*nb_hidden, action_size], initializer=xav())
-            bo = tf.get_variable('bo', [action_size], initializer=tf.constant_initializer(0.))
+            state_reshaped = tf.concat(axis=1, values=(output_state_fw.c, output_state_fw.h, output_state_bw.c, output_state_bw.h))
+            
+            # output projection - desnse
+            Wo = tf.get_variable('Wo', [4*nb_hidden, action_size], 
+                    initializer=xav())
+            bo = tf.get_variable('bo', [action_size], 
+                    initializer=tf.constant_initializer(0.))  
 
             logits = tf.matmul(state_reshaped, Wo) + bo
-            ########################################################################
+            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
+            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
 
+            # get probability distribution over the response template and pick the highest probability
+            # if action mask active
             if self.is_action_mask:
                 probs = tf.multiply(tf.squeeze(tf.nn.softmax(logits)), action_mask_)
+            # no action mask active
             else:
                 probs = tf.squeeze(tf.squeeze(tf.nn.softmax(logits)))
-            
             prediction = tf.arg_max(probs, dimension=0)
-
-            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
-
-            # default was 0.1
-            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
 
             # each output values
             self.loss = loss
             self.prediction = prediction
             self.probs = probs
             self.logits = logits
-            # self.state = state
+            # self.state_fw = output_state_fw
+            # self.state_bw = output_state_bw
             self.train_op = train_op
 
             # attach placeholder

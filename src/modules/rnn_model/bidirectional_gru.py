@@ -43,36 +43,28 @@ class BidirectionalGRU():
 
             cell_fw = tf.contrib.rnn.GRUCell(num_units=nb_hidden)
             cell_bw = tf.contrib.rnn.GRUCell(num_units=nb_hidden)
-            output = tf.nn.static_bidirectional_rnn(cell_fw, cell_bw,
+            
+            outputs, output_state_fw, output_state_bw = tf.nn.static_bidirectional_rnn(cell_fw, cell_bw,
                                                         inputs=[projected_features],
-                                                        # initial_state_fw=([init_state_c_],[init_state_h_]),
-                                                        # initial_state_bw=([init_state_cc_],[init_state_hh_]),
-                                                        sequence_length=[1],
                                                         dtype=tf.float32)
 
-
-            _, output_state_fw, output_state_bw = output
-            
-            # ouput projection - 아웃풋 dimention을 맞춰주기 위한 trick ###########
             state_reshaped = tf.concat(axis=1, values=(output_state_fw, output_state_bw))
 
-            Wo = tf.get_variable('Wo', [2*nb_hidden, action_size], initializer=xav())
-            bo = tf.get_variable('bo', [action_size], initializer=tf.constant_initializer(0.))
+            Wo = tf.get_variable('Wo', [2*nb_hidden, action_size], 
+                    initializer=xav())
+            bo = tf.get_variable('bo', [action_size], 
+                    initializer=tf.constant_initializer(0.))
 
             logits = tf.matmul(state_reshaped, Wo) + bo
-            ########################################################################
-
+            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
+            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
+            
             if self.is_action_mask:
                 probs = tf.multiply(tf.squeeze(tf.nn.softmax(logits)), action_mask_)
             else:
                 probs = tf.squeeze(tf.squeeze(tf.nn.softmax(logits)))
             
             prediction = tf.arg_max(probs, dimension=0)
-
-            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
-
-            # default was 0.1
-            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
 
             # each output values
             self.loss = loss

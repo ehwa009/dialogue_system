@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 #-*- encoding: utf8 -*-
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 import modules.util_kor as util
 
 class Data():

@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 from tensorflow.contrib.layers import xavier_initializer as xav
 
-class InvertedLSTM():
+class LSTM ():
 
     def __init__(self, obs_size, nb_hidden=128, action_size=16, lang='eng', is_action_mask=False):
 
@@ -19,6 +19,7 @@ class InvertedLSTM():
         self.action_size = action_size
         self.lang = lang
         self.is_action_mask = is_action_mask
+        self.step = 0
 
         if self.lang == 'eng':
             self.file_path = os.path.join(rospkg.RosPack().get_path('dialogue_system'),'ckpt')
@@ -28,47 +29,46 @@ class InvertedLSTM():
         def __graph__():
             tf.reset_default_graph()
 
-            # entry points
             features_ = tf.placeholder(tf.float32, [1, obs_size], name='input_features')
-            features_ = tf.reverse(features_, [1], name='inverted_input')
-
             init_state_c_, init_state_h_ = ( tf.placeholder(tf.float32, [1, nb_hidden]) for _ in range(2) )
             action_ = tf.placeholder(tf.int32, name='ground_truth_action')
             if self.is_action_mask:
                 action_mask_ = tf.placeholder(tf.float32, [action_size], name='action_mask')
-            
-            # input projection - 인풋 dimention을 맞춰주기 위한 trick ##############
-            Wi = tf.get_variable('Wi', [obs_size, nb_hidden], initializer=xav())
-            bi = tf.get_variable('bi', [nb_hidden], initializer=tf.constant_initializer(0.))
-            
-            projected_features = tf.matmul(features_, Wi) + bi
-            ########################################################################
 
-            lstm_f = tf.contrib.rnn.LSTMCell(num_units=nb_hidden, state_is_tuple=True)
-            lstm_op, state = lstm_f(inputs=projected_features, state=(init_state_c_, init_state_h_))
-
-            # ouput projection - 아웃풋 dimention을 맞춰주기 위한 trick ###########
+            # input projection
+            Wi = tf.get_variable('Wi', [obs_size, nb_hidden], 
+                    initializer=xav())
+            bi = tf.get_variable('bi', [nb_hidden], 
+                    initializer=tf.constant_initializer(0.))
+ 
+            projected_features = tf.matmul(features_, Wi) + bi 
+                
+            lstm_f = tf.contrib.rnn.LSTMCell(nb_hidden, state_is_tuple=True)
+            output, state = lstm_f(inputs=projected_features, state=(init_state_c_, init_state_h_))
+            
+            # reshape LSTM's state tuple (2,128) -> (1,256)
             state_reshaped = tf.concat(axis=1, values=(state.c, state.h))
 
-            Wo = tf.get_variable('Wo', [2*nb_hidden, action_size], initializer=xav())
-            bo = tf.get_variable('bo', [action_size], initializer=tf.constant_initializer(0.))
+            # output projection - desnse
+            Wo = tf.get_variable('Wo', [2*nb_hidden, action_size], 
+                    initializer=xav())
+            bo = tf.get_variable('bo', [action_size], 
+                    initializer=tf.constant_initializer(0.))
             
             logits = tf.matmul(state_reshaped, Wo) + bo
-            ########################################################################
-
+            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
+            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
+            
+            # probabilities
+            #  normalization : elemwise multiply with action mask
             if self.is_action_mask:
                 probs = tf.multiply(tf.squeeze(tf.nn.softmax(logits)), action_mask_)
             else:
                 probs = tf.squeeze(tf.squeeze(tf.nn.softmax(logits)))
-            
+            # prediction
             prediction = tf.arg_max(probs, dimension=0)
 
-            loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=action_)
-
-            # default was 0.1
-            train_op = tf.train.AdadeltaOptimizer(0.1).minimize(loss)
-
-            # each output values
+            # attach symbols to self
             self.loss = loss
             self.prediction = prediction
             self.probs = probs
@@ -76,7 +76,7 @@ class InvertedLSTM():
             self.state = state
             self.train_op = train_op
 
-            # attach placeholder
+            # attach placeholders
             self.features_ = features_
             self.init_state_c_ = init_state_c_
             self.init_state_h_ = init_state_h_
@@ -162,6 +162,5 @@ class InvertedLSTM():
         else:
             rospy.logwarn('no checkpoint found...\n')
 
-
-
-            
+if __name__ == "__main__":
+    lstm = LSTM(100)
