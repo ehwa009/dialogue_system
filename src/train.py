@@ -131,7 +131,7 @@ class Train():
         if cont:
             self.net.restore()
 
-        epochs = 12
+        epochs = 20
         # start measuring time
         for j in range(epochs):
             num_tr_examples = len(self.dialog_indices_tr)
@@ -151,11 +151,11 @@ class Train():
             msg = '\n{}.dev turn_accuracy {}, dialog_accuracy {}'.format(j+1, turn_accuracy, dialog_accuracy)
             rospy.loginfo(msg)
 
-            # if accuracy > 0.999:
-            #     self.net.save()
-            #     break
+            if dialog_accuracy > 0.999:
+                self.net.save()
+                break
         # save checkpoint
-        # self.net.save()
+        self.net.save()
     
     def dialog_train(self, dialog):
         ###################################################################

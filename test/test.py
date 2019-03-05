@@ -7,7 +7,7 @@ sys.setdefaultencoding('utf-8')
 
 import rospy
 
-from mind_msgs.msg import Reply, RaisingEvents, DBQuery
+from mind_msgs.msg import Reply, RaisingEvents
 from mind_msgs.srv import ReloadWithResult, ReadData, WriteData
 
 class Node():

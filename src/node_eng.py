@@ -17,15 +17,18 @@ import rospy
 import json
 import random
 
-from modules.rnn_model.hcn_lstm_model import HCN_LSTM
-from modules.rnn_model.gru_model import GRU
-from modules.rnn_model.inverted_gru_model import InvertedGRU
-from modules.rnn_model.inverted_lstm_model import InvertedLSTM
-from modules.rnn_model.multi_gru_model import MultiGRU
-from modules.rnn_model.multi_lstm_model import MultiLSTM
+# load rnn models
+from modules.rnn_model.gru import GRU
+from modules.rnn_model.lstm import LSTM
+from modules.rnn_model.reversed_input_lstm import ReversingLSTM
+from modules.rnn_model.reversed_input_gru import ReversingGRU
+from modules.rnn_model.stacked_gru import StackedGRU
+from modules.rnn_model.stacked_lstm import StackedLSTM
+from modules.rnn_model.bidirectional_lstm import BidirectionalLSTM
+from modules.rnn_model.bidirectional_gru import BidirectionalGRU
 
-from mind_msgs.msg import Reply, RaisingEvents, DBQuery
-from mind_msgs.srv import ReloadWithResult, ReadData, WriteData, DBQuery
+from mind_msgs.msg import Reply, RaisingEvents
+from mind_msgs.srv import DBQuery
 from std_msgs.msg import Int16, Bool, Empty
 
 PRESCRIPTION = ['''I'm sorry {first_name}, your doctor has not yet written your prescription \n
@@ -44,47 +47,58 @@ class Dialogue():
         self.usr_count = 0
         self.sys_count = 0
 
-        # selected network and langauge
-        network = rospy.get_param('~network_model', 'lstm')
-        lang = rospy.get_param('~lang', 'eng')
-        self.is_action_mask = rospy.get_param('~action_mask', "true")
+        # paramaters
+        self.network_type = rospy.get_param('~network_model', 'stacked_lstm')
+        self.lang_type = rospy.get_param('~lang', 'eng')
+        self.is_emb = rospy.get_param('~embedding', 'false')
+        self.is_am = rospy.get_param('~action_mask', "true")
 
+        # call rest of modules
         self.et = EntityTracker()
         self.at = ActionTracker(self.et)
         self.bow_enc = BoW_encoder()
-        self.emb = UtteranceEmbed(lang=lang)
+        self.emb = UtteranceEmbed(lang=self.lang_type)
 
-        obs_size = self.emb.dim + self.bow_enc.vocab_size + self.et.num_features
+        # select observation size for RNN
+        if self.is_am and self.is_emb:
+            obs_size = self.emb.dim + self.bow_enc.vocab_size + self.et.num_features + self.at.action_size
+        elif self.is_am and not(self.is_emb):
+            obs_size = self.bow_enc.vocab_size + self.et.num_features + self.at.action_size
+        elif not(self.is_am) and self.is_emb:
+            obs_size = self.emb.dim + self.bow_enc.vocab_size + self.et.num_features
+        elif not(self.is_am) and not(self.is_emb):
+            obs_size = self.bow_enc.vocab_size + self.et.num_features
+        
         self.action_template = self.at.get_action_templates()
-
-        self.at.do_display_template()
-
+        # self.at.do_display_template()
         # must clear entities space
         self.et.do_clear_entities()
-
         action_size = self.at.action_size
         nb_hidden = 128
 
-        if network == 'hcn_lstm':
-            self.net = HCN_LSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
-        elif network == 'gru':
-            self.net = GRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
-        elif network == 'inverted_gru':
-            self.net = InvertedGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
-        elif network == 'inverted_lstm':
-            self.net = InvertedLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
-        elif network == 'multi_gru':
-            self.net = MultiGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
-        elif network == 'multi_lstm':
-            self.net = MultiLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=lang, is_action_mask=self.is_action_mask)
+        if self.network_type == 'gru':
+            self.net = GRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'reversed_lstm':
+            self.net = ReversingLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'reversed_gru':
+            self.net = ReversingGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'stacked_gru':
+            self.net = StackedGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'stacked_lstm':
+            self.net = StackedLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'lstm':
+            self.net = LSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'bidirectional_lstm':
+            self.net = BidirectionalLSTM(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
+        elif self.network_type == 'bidirectional_gru':
+            self.net = BidirectionalGRU(obs_size=obs_size, nb_hidden=nb_hidden, action_size=action_size, lang=self.lang_type, is_action_mask=self.is_am)
         
-        # restore trained file
+        # restore trained model
         self.net.restore()
 
+        # rostopics
         self.pub_reply = rospy.Publisher('reply', Reply, queue_size=10)
-        # self.pub_qeury = rospy.Publisher('query', DBQuery, queue_size=10)
         self.pub_complete = rospy.Publisher('complete_execute_scenario', Empty, queue_size=10)
-
         rospy.Subscriber('raising_events', RaisingEvents, self.handle_raise_events)
 
         try:
@@ -94,57 +108,54 @@ class Dialogue():
         except rospy.exceptions.ROSInterruptException as e:
             rospy.logerr(e)
             quit()
-        rospy.logwarn("network: {}, lang: {}, action_mask: {}".format(network, lang, self.is_action_mask))
+        rospy.logwarn("network: {}, lang: {}, action_mask: {}, embedding: {}".format(self.network_type, self.lang_type, self.is_am, self.is_emb))
         rospy.loginfo('\033[94m[%s]\033[0m initialized.'%rospy.get_name())
 
     def handle_raise_events(self, msg):
         utterance = msg.recognized_word
-        
         if utterance == 'clear':
             self.net.reset_state()
             self.et.do_clear_entities()
-
             response = 'context has been cleared.'
-
         else:
             if 'silency_detected' in msg.events:
                 utterance = '<SILENCE>'
             else:
-                # add user count
+                # add use's turn count for measuring
                 self.usr_count += 1
                 utterance = utterance.lower()
-
             rospy.loginfo("actual input: %s" %utterance)
             
             # check inappropriate word coming as a input
             try:
                 u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
                 u_ent_features = self.et.context_features()
-                u_emb = self.emb.encode(utterance)
                 u_bow = self.bow_enc.encode(utterance)
-                
-                if self.is_action_mask:
+                if self.is_emb:
+                    u_emb = self.emb.encode(utterance)
+                if self.is_am:
                     action_mask = self.at.action_mask()
 
-                # print(u_ent_features)
-                # print(u_emb)
-                # print(u_bow)
-
-                features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
+                # concatenated features
+                if self.is_am and self.is_emb:
+                    features = np.concatenate((u_ent_features, u_emb, u_bow, action_mask), axis=0)
+                elif self.is_am and not(self.is_emb):
+                    features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
+                elif not(self.is_am) and self.is_emb:
+                    features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
+                elif not(self.is_am) and not(self.is_emb):
+                    features = np.concatenate((u_ent_features, u_bow), axis=0)
                 
-                if self.is_action_mask:
+                if self.is_am:
                     probs, prediction = self.net.forward(features, action_mask)
                 else:
                     probs, prediction = self.net.forward(features)
 
                 # check response confidence
                 if max(probs) > 0.5:
-                    print('TEST: %d' % prediction)  
-                    
-                    response = self.action_template[prediction]
                     # add system turn
                     self.sys_count += 1
-
+                    response = self.action_template[prediction]
                     # check validity
                     prediction = self.pre_action_process(prediction, u_entities)
 
@@ -174,14 +185,12 @@ class Dialogue():
                                 u_entities['<address_number>'], u_entities['<address_name>'],
                                 u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>']
                             )
-                        # TODO: implement real api call
+                        # api call to qeury cloud DB
                         response = self.get_response_db(response)
                         response = response.response 
-
                     else:
                         require_name = [7,10,12]
                         prediction = self.action_post_process(prediction, u_entities)
-
                         if prediction in require_name:
                             response = self.action_template[prediction]
                             response = response.split(' ')
@@ -193,7 +202,6 @@ class Dialogue():
                     response = random.choice(REPROMPT)
             except:
                 response = random.choice(REPROMPT)
-
         # print status of entities and actual response
         rospy.loginfo(json.dumps(self.et.entities, indent=2))
         try:
@@ -204,7 +212,6 @@ class Dialogue():
         reply_msg = Reply()
         reply_msg.header.stamp = rospy.Time.now()
         reply_msg.reply = response
-
         self.pub_reply.publish(reply_msg)
 
     def post_process(self, prediction, u_ent_features):
