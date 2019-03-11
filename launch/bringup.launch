@@ -1,7 +1,7 @@
 <launch>
     <arg name="network_model" default="lstm" />
     <arg name="lang" default='eng' />
-    <arg name="action_mask" default="true" />
+    <arg name="action_mask" default="false" />
     <arg name="embedding" default="true" />
     <arg name="kb" default="true" />
     

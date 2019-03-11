@@ -304,8 +304,8 @@ if __name__ == '__main__':
     rospy.init_node('dialogue_trainer', anonymous=False)
     
     t = Train(sys.argv[1:])
-    t.train()
-    # t.train(cont=True)
+    # t.train()
+    t.train(cont=True)
     # print(t.evaluate(eval=True))
     rospy.signal_shutdown('training finish')
     
