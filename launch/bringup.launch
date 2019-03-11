@@ -1,8 +1,8 @@
 <launch>
-    <arg name="network_model" default="stacked_lstm" />
+    <arg name="network_model" default="lstm" />
     <arg name="lang" default='eng' />
     <arg name="action_mask" default="true" />
-    <arg name="embedding" default="false" />
+    <arg name="embedding" default="true" />
     <arg name="kb" default="true" />
     
     <!-- english version dialogue system -->
@@ -21,6 +21,7 @@
         <param name="embedding" value="$(arg embedding)" />
     </node>
 
+    <!-- cloud knowledge base -->
     <include file="$(find dynamodb_ros)/launch/bringup.launch">
         <arg name="lang" value="$(arg lang)" />
     </include>    

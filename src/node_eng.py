@@ -37,7 +37,7 @@ PRESCRIPTION = ['''I'm sorry {first_name}, your doctor has not yet written your 
                 Once the prescription has been written, someone will call you and let you know.''']
 APPOINTMENT = ['''No problem {first_name}, I can see that you have an appointment with Dr Jones today and have checked you in''']
 BATHROOM = ['''Certainly, the bathroom is located down the hall, second door on the right''']
-WAITING = ['''{first_name}, you are next to see Dr. jones, he will be around 5 more minutes.''']
+WAITING = ['''{first_name}, you are next to see Doctor jones, he will be around 5 more minutes.''']
 REPROMPT = ["I missed that, can you say that again?", "sorry I can't understand, please say that again."]
 
 class Dialogue():
@@ -127,12 +127,14 @@ class Dialogue():
             rospy.loginfo("actual input: %s" %utterance)
             
             # check inappropriate word coming as a input
+            # try:
+            u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
+            u_ent_features = self.et.context_features()
+            u_bow = self.bow_enc.encode(utterance)
+            if self.is_emb:
+                u_emb = self.emb.encode(utterance)
+            
             try:
-                u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
-                u_ent_features = self.et.context_features()
-                u_bow = self.bow_enc.encode(utterance)
-                if self.is_emb:
-                    u_emb = self.emb.encode(utterance)
                 if self.is_am:
                     action_mask = self.at.action_mask()
 
@@ -152,7 +154,8 @@ class Dialogue():
                     probs, prediction = self.net.forward(features)
 
                 # check response confidence
-                if max(probs) > 0.5:
+                print(prediction)
+                if max(probs) > 0.4:
                     # add system turn
                     self.sys_count += 1
                     response = self.action_template[prediction]
@@ -161,9 +164,11 @@ class Dialogue():
 
                     if (prediction == 6) or (prediction == 7):
                         self.pub_complete.publish()
+                        # self.net.restore()
                         # logging user and system turn
                         rospy.logwarn("user: %i, system: %i"%(self.usr_count, self.sys_count))
                             
+                    
                     if self.post_process(prediction, u_entities):
                         if prediction == 1:
                             response = 'api_call appointment {} {} {} {} {} {} {}'.format(
@@ -190,7 +195,7 @@ class Dialogue():
                         response = response.response 
                     else:
                         require_name = [7,10,12]
-                        prediction = self.action_post_process(prediction, u_entities)
+                        # prediction = self.action_post_process(prediction, u_entities)
                         if prediction in require_name:
                             response = self.action_template[prediction]
                             response = response.split(' ')
