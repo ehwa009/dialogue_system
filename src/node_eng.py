@@ -12,8 +12,8 @@ warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 import modules.util as util
 import numpy as np
-import sys
-import rospy
+import sys, os
+import rospy,rospkg
 import json
 import random
 
@@ -43,6 +43,10 @@ REPROMPT = ["I missed that, can you say that again?", "sorry I can't understand,
 class Dialogue():
 
     def __init__(self):
+        # stor whole dialogues
+        self.story = []
+        self.file_path = os.path.join(rospkg.RosPack().get_path('dialogue_system'),'log', 'dialogue.txt')
+        
         # count turn taking
         self.usr_count = 0
         self.sys_count = 0
@@ -52,6 +56,7 @@ class Dialogue():
         self.lang_type = rospy.get_param('~lang', 'eng')
         self.is_emb = rospy.get_param('~embedding', 'false')
         self.is_am = rospy.get_param('~action_mask', "true")
+        self.user_num = rospy.get_param('~user_number', '0')
 
         # call rest of modules
         self.et = EntityTracker()
@@ -108,7 +113,8 @@ class Dialogue():
         except rospy.exceptions.ROSInterruptException as e:
             rospy.logerr(e)
             quit()
-        rospy.logwarn("network: {}, lang: {}, action_mask: {}, embedding: {}".format(self.network_type, self.lang_type, self.is_am, self.is_emb))
+        rospy.logwarn("network: {}, lang: {}, action_mask: {}, embedding: {}, user_number: {}".format(self.network_type, self.lang_type, self.is_am, self.is_emb, self.user_num))
+        self.story.append('user number: %s'%self.user_num)
         rospy.loginfo('\033[94m[%s]\033[0m initialized.'%rospy.get_name())
 
     def handle_raise_events(self, msg):
@@ -117,106 +123,108 @@ class Dialogue():
             self.net.reset_state()
             self.et.do_clear_entities()
             response = 'context has been cleared.'
+        
         else:
             if 'silency_detected' in msg.events:
                 utterance = '<SILENCE>'
             else:
-                # add use's turn count for measuring
+                self.story.append("U%i: %s"%(self.usr_count+1, utterance))
                 self.usr_count += 1
                 utterance = utterance.lower()
-            rospy.loginfo("actual input: %s" %utterance)
             
-            # check inappropriate word coming as a input
-            # try:
+            rospy.loginfo("actual input: %s" %utterance) # check actual user input
+            
+            # handle actual user utterance
+            
+            ######################################################################################################
+            ################################# utterance preprocessing ############################################
             u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
             u_ent_features = self.et.context_features()
             u_bow = self.bow_enc.encode(utterance)
             if self.is_emb:
                 u_emb = self.emb.encode(utterance)
+            if self.is_am:
+                action_mask = self.at.action_mask()
+            # concatenated features
+            if self.is_am and self.is_emb:
+                features = np.concatenate((u_ent_features, u_emb, u_bow, action_mask), axis=0)
+            elif self.is_am and not(self.is_emb):
+                features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
+            elif not(self.is_am) and self.is_emb:
+                features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
+            elif not(self.is_am) and not(self.is_emb):
+                features = np.concatenate((u_ent_features, u_bow), axis=0)
+            ######################################################################################################
+            ######################################################################################################
             
             try:
-                if self.is_am:
-                    action_mask = self.at.action_mask()
-
-                # concatenated features
-                if self.is_am and self.is_emb:
-                    features = np.concatenate((u_ent_features, u_emb, u_bow, action_mask), axis=0)
-                elif self.is_am and not(self.is_emb):
-                    features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
-                elif not(self.is_am) and self.is_emb:
-                    features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-                elif not(self.is_am) and not(self.is_emb):
-                    features = np.concatenate((u_ent_features, u_bow), axis=0)
-                
+                # predict template number
                 if self.is_am:
                     probs, prediction = self.net.forward(features, action_mask)
                 else:
                     probs, prediction = self.net.forward(features)
 
                 # check response confidence
-                print(prediction)
                 if max(probs) > 0.4:
-                    # add system turn
-                    self.sys_count += 1
                     response = self.action_template[prediction]
-                    # check validity
-                    prediction = self.pre_action_process(prediction, u_entities)
-
-                    if (prediction == 6) or (prediction == 7):
-                        self.pub_complete.publish()
-                        # self.net.restore()
-                        # logging user and system turn
-                        rospy.logwarn("user: %i, system: %i"%(self.usr_count, self.sys_count))
-                            
+                    prediction = self.pre_action_process(prediction, u_entities)       
                     
+                    # handle api call
                     if self.post_process(prediction, u_entities):
                         if prediction == 1:
                             response = 'api_call appointment {} {} {} {} {} {} {}'.format(
                                 u_entities['<first_name>'], u_entities['<last_name>'],  
                                 u_entities['<address_number>'], u_entities['<address_name>'],
-                                u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>']
-                            )
+                                u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>'])
                         elif prediction == 2:
                             response = 'api_call location {}'.format(u_entities['<location>'])
                         elif prediction == 3:
                             response = 'api_call prescription {} {} {} {} {}'.format(
                                 u_entities['<first_name>'], u_entities['<last_name>'],
                                 u_entities['<address_number>'], u_entities['<address_name>'],
-                                u_entities['<address_type>']
-                            )
+                                u_entities['<address_type>'])
                         elif prediction == 4:
                             response = 'api_call waiting_time {} {} {} {} {} {} {}'.format(
                                 u_entities['<first_name>'], u_entities['<last_name>'],
                                 u_entities['<address_number>'], u_entities['<address_name>'],
-                                u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>']
-                            )
-                        # api call to qeury cloud DB
-                        response = self.get_response_db(response)
+                                u_entities['<address_type>'], u_entities['<time>'], u_entities['<pm_am>'])
+                        response = self.get_response_db(response) # query knowledge base; here we use dynamo db
                         response = response.response 
+                    elif prediction in [7,10,12]:
+                        response = self.action_template[prediction]
+                        response = response.split(' ')
+                        response = [word.replace('<first_name>', u_entities['<first_name>']) for word in response]
+                        response = ' '.join(response)
                     else:
-                        require_name = [7,10,12]
-                        # prediction = self.action_post_process(prediction, u_entities)
-                        if prediction in require_name:
-                            response = self.action_template[prediction]
-                            response = response.split(' ')
-                            response = [word.replace('<first_name>', u_entities['<first_name>']) for word in response]
-                            response = ' '.join(response)
-                        else:
-                            response = self.action_template[prediction]
+                        response = self.action_template[prediction]
+
                 else:
-                    response = random.choice(REPROMPT)
+                    response = random.choice(REPROMPT) # if prediction confidence less than 40%, reprompt    
             except:
                 response = random.choice(REPROMPT)
-        # print status of entities and actual response
-        rospy.loginfo(json.dumps(self.et.entities, indent=2))
+        
+            # add system turn
+            self.story.append("A%i: %s"%(self.sys_count+1, response))
+            self.sys_count += 1
+            # finish interaction
+            if (prediction == 6) or (prediction == 7):
+                self.pub_complete.publish()
+                # logging user and system turn
+                rospy.logwarn("user: %i, system: %i"%(self.usr_count, self.sys_count))
+                self.story.append('===================================================================')
+                self.write_file(self.file_path, self.story)    
+        
+        # display system response
         try:
+            rospy.loginfo(json.dumps(self.et.entities, indent=2)) # recognized entity values
             rospy.logwarn("System: [conf: %f, predict: %d] / %s\n" %(max(probs), prediction, response))
         except:
             rospy.logwarn("System: [conf: ] / %s\n" %(response))
-
+       
         reply_msg = Reply()
         reply_msg.header.stamp = rospy.Time.now()
         reply_msg.reply = response
+        
         self.pub_reply.publish(reply_msg)
 
     def post_process(self, prediction, u_ent_features):
@@ -281,6 +289,13 @@ class Dialogue():
                 prediction = attr_mapping_dict['<first_name>']
 
         return prediction
+
+   # writing story log file
+    def write_file(self, path, story_list):
+        with open(path, 'a') as f:
+            for item in story_list:
+                f.write("%s\n"%item)
+        rospy.logwarn('save dialogue histories.')
 
 if __name__ == '__main__':
     rospy.init_node('dialogue_system', anonymous=False)

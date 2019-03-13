@@ -4,6 +4,7 @@
     <arg name="action_mask" default="false" />
     <arg name="embedding" default="true" />
     <arg name="kb" default="true" />
+    <arg name="user_number" default="0" />
     
     <!-- english version dialogue system -->
     <node name="dialogue_system" type="node_eng.py" pkg="dialogue_system" output="screen" if="$(eval lang == 'eng')">
@@ -11,6 +12,7 @@
         <param name="lang" value="$(arg lang)" />
         <param name="action_mask" value="$(arg action_mask)" />
         <param name="embedding" value="$(arg embedding)" />
+        <param name="user_number" value="$(arg user_number)" />
     </node>
     
     <!-- korean version dialogue system -->
