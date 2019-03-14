@@ -1,5 +1,5 @@
 <launch>
-    <arg name="network_model" default="lstm" />
+    <arg name="network_model" default="stacked_lstm" />
     <arg name="lang" default='eng' />
     <arg name="action_mask" default="false" />
     <arg name="embedding" default="true" />

@@ -7,21 +7,21 @@ import numpy as np
 from modules.entities import EntityTracker as et
 
 '''
-############## Action Template ###############                                                                   
-0. and which doctor are you seeing?                                                                              
-1. api_call appointment <first_name> <last_name> <address_number> <address_name> <address_type> <time> <pm_am>   
-2. api_call location <location>                                                                                  
-3. api_call prescription <first_name> <last_name> <address_number> <address_name> <address_type>                 
-4. api_call waiting_time <first_name> <last_name> <address_number> <address_name> <address_type> <time> <pm_am>  
-5. hi there, my name is Nao, the receptionist robot. how may I help you?                                         
-6. i hope you have a nice day                                                                                    
-7. i hope you have a nice day <first_name>                                                                       
-8. is there anything else i can help you with?                                                                   
-9. no problem, which doctor are you seeing?                                                                      
-10. okay <first_name> , what time is your appointment                                                            
-11. okay, can you please tell me your name?                                                                      
-12. thanks <first_name> , and what is your address?                                                              
-##############################################                                                                   
+############## Action Template ###############                                                                                                        
+0. and which doctor are you seeing?                                                                                                                   
+1. api_call appointment <first_name> <last_name> <address_number> <address_name> <address_type> <time> <pm_am>                                        
+2. api_call location <location>                                                                                                                       
+3. api_call prescription <first_name> <last_name> <address_number> <address_name> <address_type>                                                      
+4. api_call waiting_time <first_name> <last_name> <address_number> <address_name> <address_type> <time> <pm_am>                                      
+5. hi there, my name is Nao, the receptionist robot. how may I help you?
+6. i hope you have a nice day <first_name>
+7. is there anything else i can help you with?
+8. no problem, which doctor are you seeing?
+9. okay <first_name> , what time is your appointment
+10. okay, can you please tell me your name?
+11. thanks <first_name> , and what is your address?
+##############################################
+                                                                 
 
 ['<address_name>', '<address_number>', '<address_type>', '<first_name>', '<last_name>', '<location>', '<pm_am>', '<time>'] 
 
