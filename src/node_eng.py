@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 import modules.util as util
 import numpy as np
-import sys, os
+import sys, os, re
 import rospy,rospkg
 import json
 import random
@@ -40,7 +40,7 @@ BATHROOM = ['''Certainly, the bathroom is located down the hall, second door on 
 WAITING = ['''{first_name}, you are next to see Doctor jones, he will be around 5 more minutes.''']
 REPROMPT = ["I missed that, can you say that again?", "sorry I can't understand, please say that again."]
 
-BOUNDARY_CONFIDENCE = 0.5
+BOUNDARY_CONFIDENCE = 0.4
 
 class Dialogue():
 
@@ -128,6 +128,8 @@ class Dialogue():
     def get_response(self, utterance):
         rospy.loginfo("actual input: %s" %utterance) # check actual user input
         
+        # clean utterance
+        utterance = re.sub(r'[^ a-z A-Z 0-9]', " ", utterance)
         # utterance preprocessing
         u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
         u_ent_features = self.et.context_features()
@@ -312,7 +314,9 @@ class Dialogue():
 
         return prediction
 
-   # writing story log file
+    ''' 
+    writing story log file
+    '''
     def write_file(self, path, story_list):
         with open(path, 'a') as f:
             for item in story_list:
