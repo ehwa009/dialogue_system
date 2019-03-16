@@ -131,7 +131,7 @@ class Train():
         if cont:
             self.net.restore()
 
-        epochs = 10
+        epochs = 20
         # start measuring time
         for j in range(epochs):
             num_tr_examples = len(self.dialog_indices_tr)

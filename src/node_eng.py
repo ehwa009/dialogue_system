@@ -129,7 +129,7 @@ class Dialogue():
         rospy.loginfo("actual input: %s" %utterance) # check actual user input
         
         # clean utterance
-        utterance = re.sub(r'[^ a-z A-Z 0-9]', " ", utterance)
+        # utterance = re.sub(r'[^ a-z A-Z 0-9]', " ", utterance)
         # utterance preprocessing
         u_ent, u_entities = self.et.extract_entities(utterance, is_test=True)
         u_ent_features = self.et.context_features()
@@ -137,20 +137,21 @@ class Dialogue():
         
         if self.is_emb:
             u_emb = self.emb.encode(utterance)
-        if self.is_am:
-            action_mask = self.at.action_mask()
-        
-        # concatenated features
-        if self.is_am and self.is_emb:
-            features = np.concatenate((u_ent_features, u_emb, u_bow, action_mask), axis=0)
-        elif self.is_am and not(self.is_emb):
-            features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
-        elif not(self.is_am) and self.is_emb:
-            features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
-        elif not(self.is_am) and not(self.is_emb):
-            features = np.concatenate((u_ent_features, u_bow), axis=0)
-        
         try:
+            if self.is_am:
+                action_mask = self.at.action_mask()
+            
+            # concatenated features
+            if self.is_am and self.is_emb:
+                features = np.concatenate((u_ent_features, u_emb, u_bow, action_mask), axis=0)
+            elif self.is_am and not(self.is_emb):
+                features = np.concatenate((u_ent_features, u_bow, action_mask), axis=0)
+            elif not(self.is_am) and self.is_emb:
+                features = np.concatenate((u_ent_features, u_emb, u_bow), axis=0)
+            elif not(self.is_am) and not(self.is_emb):
+                features = np.concatenate((u_ent_features, u_bow), axis=0)
+            
+            # try:
             # predict template number
             if self.is_am:
                 probs, prediction = self.net.forward(features, action_mask)

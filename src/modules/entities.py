@@ -30,7 +30,7 @@ class EntityTracker():
         self.address_name = ['green']
         self.address_type = ['street']
         self.time = ['3', '4']
-        self.pm_am = ['p.m']
+        self.pm_am = ['p.m.', 'p.m']
         self.location = ['bathroom']
 
         self.EntType = Enum('Entity Type', '<first_name> <last_name> <address_number> <address_name> <address_type> <time> <pm_am> <location> <non_ent>')

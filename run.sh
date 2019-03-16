@@ -6,7 +6,7 @@ while [ $counter -le 1 ]
 do
     # rosrun dialogue_system train.py am emb lstm eng
     # rosrun dialogue_system train.py am no lstm eng
-    rosrun dialogue_system train.py no emb lstm eng
+    # rosrun dialogue_system train.py no emb lstm eng
     # rosrun dialogue_system train.py no no lstm eng
 
     # rosrun dialogue_system train.py am emb gru eng
@@ -24,7 +24,7 @@ do
     # rosrun dialogue_system train.py no emb reversed_gru eng
     # rosrun dialogue_system train.py no no reversed_gru eng
 
-    # rosrun dialogue_system train.py am emb stacked_lstm eng
+    rosrun dialogue_system train.py am emb stacked_lstm eng
     # rosrun dialogue_system train.py am no stacked_lstm eng
     rosrun dialogue_system train.py no emb stacked_lstm eng
     # rosrun dialogue_system train.py no no stacked_lstm eng
@@ -36,7 +36,7 @@ do
 
     # rosrun dialogue_system train.py am emb bidirectional_lstm eng
     # rosrun dialogue_system train.py am no bidirectional_lstm eng
-    rosrun dialogue_system train.py no emb bidirectional_lstm eng
+    # rosrun dialogue_system train.py no emb bidirectional_lstm eng
     # rosrun dialogue_system train.py no no bidirectional_lstm eng
 
     # rosrun dialogue_system train.py am emb bidirectional_gru eng
