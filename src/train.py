@@ -131,7 +131,7 @@ class Train():
         if cont:
             self.net.restore()
 
-        epochs = 20
+        epochs = 10
         # start measuring time
         for j in range(epochs):
             num_tr_examples = len(self.dialog_indices_tr)
@@ -155,7 +155,7 @@ class Train():
                 self.net.save()
                 break
         # save checkpoint
-        # self.net.save()
+        self.net.save()
     
     def dialog_train(self, dialog):
         ###################################################################
@@ -304,8 +304,8 @@ if __name__ == '__main__':
     rospy.init_node('dialogue_trainer', anonymous=False)
     
     t = Train(sys.argv[1:])
-    t.train()
-    # t.train(cont=True)
+    # t.train()
+    t.train(cont=True)
     # print(t.evaluate(eval=True))
     rospy.signal_shutdown('training finish')
     
