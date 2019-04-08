@@ -164,7 +164,6 @@ class Train():
             from modules.data_utils import Data
             from modules.actions import ActionTracker
             from modules.bow import BoW_encoder
-            
         elif self.lang_type == 'kor':
             from modules.entities_kor import EntityTracker
             from modules.data_utils_kor import Data
@@ -186,6 +185,16 @@ class Train():
                 u_emb = self.emb.encode(u)
             if self.is_action_mask:
                 action_mask = at.action_mask()
+            
+            # print(u, r)
+            # print(u_ent_features)
+            # print('================================')
+            # print(u_emb)
+            # print('================================')
+            # print(u_bow)
+            # print('================================')
+            # print(action_mask)
+
 
             # concatenated features
             if self.is_action_mask and self.is_emb:
@@ -304,8 +313,8 @@ if __name__ == '__main__':
     rospy.init_node('dialogue_trainer', anonymous=False)
     
     t = Train(sys.argv[1:])
-    # t.train()
-    t.train(cont=True)
+    t.train()
+    # t.train(cont=True)
     # print(t.evaluate(eval=True))
     rospy.signal_shutdown('training finish')
     

@@ -16,10 +16,9 @@ from modules.entities import EntityTracker as et
 5. hi there, my name is Nao, the receptionist robot. how may I help you?
 6. i hope you have a nice day <first_name>
 7. is there anything else i can help you with?
-8. no problem, which doctor are you seeing?
-9. okay <first_name> , what time is your appointment
-10. okay, can you please tell me your name?
-11. thanks <first_name> , and what is your address?
+8. okay <first_name> , what time is your appointment
+9. okay, can you please tell me your name?
+10. thanks <first_name> , and what is your address?
 ##############################################
                                                                  
 
@@ -36,18 +35,18 @@ class ActionTracker():
         self.am = np.zeros([self.action_size], dtype=np.float32)
         # action mask lookup, built on intuition
         self.am_dict = {
-            '00000000' : [0,5,7,8,10],
-            '11100100' : [0,1,2,3,4,5,7,8,10], 
-            '00011000' : [0,2,5,6,7,8,9,10,11],
-            '11111000' : [0,1,2,3,5,6,7,8,9,10,11],
-            '11111011' : [0,1,3,4,5,6,7,8,9,10,11],
-            '11111111' : [0,1,2,3,4,5,6,7,8,9,10,11],
-            '11100000' : [0,1,3,4,5,7,8,10],
-            '00000100' : [0,5,7,8,10],   
-            '11111100' : [0,1,2,3,5,6,7,8,9,10,11],    
-            '00011100' : [0,2,5,6,7,8,9,10,11],
-            '00000111' : [0,2,5,7,8,10],
-            '00011111' : [0,2,5,6,7,8,9,10,11],
+            '00000000' : [0,5,6,7,8,9,10],
+            '11100100' : [0,2,5,6,7,8,9,10], 
+            '00011000' : [0,5,6,7,8,9,10],
+            '11111000' : [0,3,5,6,7,8,9,10],
+            '11111011' : [0,1,3,4,5,6,7,8,9,10],
+            '11111111' : [0,1,2,3,4,5,6,7,8,9,10],
+            '11100000' : [0,5,6,7,8,9,10],
+            '00000100' : [0,2,5,6,7,8,9,10],   
+            '11111100' : [0,2,3,5,6,7,8,9,10],    
+            '00011100' : [0,2,5,6,7,8,9,10],
+            '00000111' : [0,2,5,6,7,8,9,10],
+            '00011111' : [0,2,5,6,7,8,9,10],
         }
         
     
